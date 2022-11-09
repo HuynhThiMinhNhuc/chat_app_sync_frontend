@@ -1,0 +1,45 @@
+name: chat_app_sync
+description: A new Flutter project.
+
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.1 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+#ui
+  flutter_screenutil: ^5.6.0
+  flutter_easyloading: ^3.0.5
+  infinite_scroll_pagination: ^3.2.0
+#icon
+  cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^10.2.1
+#manage state
+  get: ^4.6.5
+#api
+  dio: ^4.0.6
+  pretty_dio_logger: ^1.2.0-beta-1
+  
+  
+dev_dependencies:
+#test
+  flutter_test:
+    sdk: flutter
+#rule
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/login_background.jpg
+    - assets/images/avatar.jpeg
+  fonts:
+    - family: FiraSans
+      fonts:
+        - asset: assets/fonts/FiraSans-Regular.ttf
+  
