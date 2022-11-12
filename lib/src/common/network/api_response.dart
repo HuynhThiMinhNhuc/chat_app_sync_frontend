@@ -41,7 +41,7 @@ class ResponseData<T> {
   Status? status;
   String? message;
 
-  bool? isSuccess() {
+  bool isSuccess() {
     return status == Status.success;
   }
 
