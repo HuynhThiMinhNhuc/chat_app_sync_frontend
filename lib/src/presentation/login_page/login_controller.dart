@@ -1,9 +1,13 @@
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
 import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
+import 'package:chat_app_sync/src/repositories/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class LoginController extends GetxController{
+class LoginController extends GetxController {
+  LoginController(this.userRepository);
+
+  final UserRepository userRepository;
   final userNameTextEditingController = TextEditingController();
   final passwordTextEditingController = TextEditingController();
 
@@ -31,13 +35,19 @@ class LoginController extends GetxController{
     return null;
   }
 
-  onLogin() {
-    if (formKey.currentState == null){
+  onLogin() async {
+    if (formKey.currentState == null) {
       AlertDialogWidget.show();
+    } else if (formKey.currentState!.validate()) {
+      //TODO: resove logic and navigate to homepage
+      final loginRes = await userRepository.login(
+          userNameTextEditingController.text,
+          passwordTextEditingController.text);
+      if (loginRes.isSuccess()) {
+        Get.toNamed(AppRoutes.homePage);
+      } else {
+        AlertDialogWidget.show(content: loginRes.message);
+      }
     }
-  else if (formKey.currentState!.validate()){
-    //TODO: resove logic and navigate to homepage
-    Get.toNamed(AppRoutes.homePage);
-  }
   }
 }
