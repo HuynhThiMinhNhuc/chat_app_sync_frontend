@@ -9,10 +9,10 @@ class UserRepository {
 
   Future<ResponseData<Map<String, dynamic>>> login(String userName, String password) async {
     try {
-      final params = {'user_name': userName, 'password': password};
+      final params = {'username': userName, 'password': password};
 
-      final res = await _apiProvider.post(AppConstant.login, params: params);
-      return ResponseData.success(res.data, response: res);
+      final res = await _apiProvider.get(AppConstant.login, params: params);
+      return ResponseData.success(res['data'], response: res);
     } catch (e) {
       return ResponseData.failed(e);
     }

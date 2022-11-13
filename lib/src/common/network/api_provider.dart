@@ -43,9 +43,9 @@ class ApiProvider {
 
   _throwIfNotSuccess({required Response response}) {
     final resData = response.data;
-    switch (resData.statusCode) {
+    switch (response.statusCode) {
       case 200:
-        return resData['data'];
+        return resData;
       case 400:
         throw InvalidPrameter(response.statusCode);
       case 401:

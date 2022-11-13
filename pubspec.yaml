@@ -22,6 +22,8 @@ dependencies:
 #api
   dio: ^4.0.6
   pretty_dio_logger: ^1.2.0-beta-1
+  get_storage: ^2.0.3
+  flutter_secure_storage: ^6.0.0
   
   
 dev_dependencies:
@@ -38,6 +40,10 @@ flutter:
   assets:
     - assets/images/login_background.jpg
     - assets/images/avatar.jpeg
+    #alert_dialog_icon
+    - assets/images/illustration/warning_icon.png
+    - assets/images/illustration/error_icon.png
+    - assets/images/illustration/success_icon.png
   fonts:
     - family: FiraSans
       fonts:
