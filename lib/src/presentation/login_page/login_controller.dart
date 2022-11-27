@@ -1,6 +1,6 @@
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
 import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
-import 'package:chat_app_sync/src/repositories/user_repository.dart';
+import 'package:chat_app_sync/src/data/repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -39,13 +39,14 @@ class LoginController extends GetxController {
     if (formKey.currentState == null) {
       AlertDialogWidget.show();
     } else if (formKey.currentState!.validate()) {
-      final loginRes = await userRepository.login(
-          userNameTextEditingController.text,
-          passwordTextEditingController.text);
-      if (loginRes.isSuccess()) {
+      //TODO: resove logic and navigate to homepage
+      try {
+        final loginRes = await userRepository.login(
+            userNameTextEditingController.text,
+            passwordTextEditingController.text);
         Get.toNamed(AppRoutes.homePage);
-      } else {
-        AlertDialogWidget.show(content: loginRes.message);
+      } catch (e) {
+        AlertDialogWidget.show(content: e as String?);
       }
     }
   }

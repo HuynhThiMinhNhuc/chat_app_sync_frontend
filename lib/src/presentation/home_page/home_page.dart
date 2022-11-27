@@ -1,4 +1,4 @@
-import 'package:chat_app_sync/src/data/chat_room.dart';
+import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:chat_app_sync/src/presentation/home_page/home_page_controller.dart';
 import 'package:chat_app_sync/src/presentation/home_page/widget/chat_room_overview.dart';
 import 'package:flutter/material.dart';

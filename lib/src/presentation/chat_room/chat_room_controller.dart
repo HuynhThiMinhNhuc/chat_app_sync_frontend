@@ -1,7 +1,7 @@
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/data/enum/message_status.dart';
-import 'package:chat_app_sync/src/data/message.dart';
+import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/mock/message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';

@@ -1,5 +1,5 @@
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
-import 'package:chat_app_sync/src/data/message.dart';
+import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

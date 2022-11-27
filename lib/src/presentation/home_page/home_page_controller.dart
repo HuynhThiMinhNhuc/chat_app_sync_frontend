@@ -1,7 +1,7 @@
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
-import 'package:chat_app_sync/src/data/chat_room.dart';
-import 'package:chat_app_sync/src/data/message.dart';
+import 'package:chat_app_sync/src/data/model/chat_room.dart';
+import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 

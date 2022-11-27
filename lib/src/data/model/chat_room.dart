@@ -1,5 +1,5 @@
-import 'package:chat_app_sync/src/data/message.dart';
-import 'package:chat_app_sync/src/data/user.dart';
+import 'package:chat_app_sync/src/data/model/message.dart';
+import 'package:chat_app_sync/src/data/model/user.dart';
 
 class ChatRoom {
   final String id;

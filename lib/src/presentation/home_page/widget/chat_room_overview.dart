@@ -1,4 +1,4 @@
-import 'package:chat_app_sync/src/data/chat_room.dart';
+import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
