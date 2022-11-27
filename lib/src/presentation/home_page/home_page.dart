@@ -18,7 +18,7 @@ class HomePage extends GetView<HomePageController> {
           backgroundColor: Theme.of(context).backgroundColor,
           elevation: 0,
           title: Text(
-            'Online list',
+            'Chat list',
             style: Theme.of(context).textTheme.bodyText1,
           ),
         ),
