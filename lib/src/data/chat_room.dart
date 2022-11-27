@@ -15,6 +15,20 @@ class ChatRoom {
       this.listMessage,
       this.name});
 
+  factory ChatRoom.fromJson(Map<String, dynamic> json) => ChatRoom(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      avatar: json['avatar'] ?? '',
+      listMessage: json['list_message'] == null
+          ? null
+          : Message.getListMessageFromJson(json['list_message'] as List));
+
   Message? get lastMessage =>
       listMessage != null ? listMessage![listMessage!.length - 1] : null;
+
+  static List<ChatRoom>? getListChatRoom(List? listJson) {
+    if (listJson == null) return null;
+
+    return (listJson.map((json) => ChatRoom.fromJson(json))).toList();
+  }
 }

@@ -39,7 +39,6 @@ class LoginController extends GetxController {
     if (formKey.currentState == null) {
       AlertDialogWidget.show();
     } else if (formKey.currentState!.validate()) {
-      //TODO: resove logic and navigate to homepage
       final loginRes = await userRepository.login(
           userNameTextEditingController.text,
           passwordTextEditingController.text);
