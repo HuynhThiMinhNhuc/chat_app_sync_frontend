@@ -2,6 +2,7 @@ import 'package:chat_app_sync/src/common/network/api_provider.dart';
 import 'package:chat_app_sync/src/data/local/local.dart';
 import 'package:chat_app_sync/src/data/network/network.dart';
 import 'package:chat_app_sync/src/data/repository/user_repository.dart';
+import 'package:chat_app_sync/src/databases/localDBController.dart';
 import 'package:get/get.dart';
 
 class AppBinding extends Bindings {
@@ -10,10 +11,12 @@ class AppBinding extends Bindings {
     final apiProvider = ApiProvider();
     final networkDatasource = NetworkDatasource(apiProvider);
     final localDatasource = LocalDatasource();
+    final localDBController = LocalDBController();
 
     Get.put(apiProvider);
     Get.put(networkDatasource);
     Get.put(localDatasource);
+    Get.put(localDBController);
 
     Get.put(UserRepository(
       networkDatasource: networkDatasource,

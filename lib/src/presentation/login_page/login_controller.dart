@@ -1,4 +1,5 @@
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
+import 'package:chat_app_sync/src/common/network/api_response.dart';
 import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
 import 'package:chat_app_sync/src/data/repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,8 +46,8 @@ class LoginController extends GetxController {
             userNameTextEditingController.text,
             passwordTextEditingController.text);
         Get.toNamed(AppRoutes.homePage);
-      } catch (e) {
-        AlertDialogWidget.show(content: e as String?);
+      } catch ( e) {
+        AlertDialogWidget.show(content: e.toString());
       }
     }
   }
