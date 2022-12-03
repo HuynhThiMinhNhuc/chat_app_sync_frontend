@@ -40,10 +40,7 @@ class ResponseData<T> {
   T? data;
   Status? status;
   String? message;
-
-  bool isSuccess() {
-    return status == Status.success;
-  }
+  bool get isSuccess => status == Status.success;
 
   ResponseData.success(this.data, {dynamic response}) {
     status = Status.success;
@@ -63,7 +60,7 @@ class ResponseData<T> {
     if (error is DioError || error is DioErrorType) {
       status = _mapErrorToState(error);
       try {
-        final json = jsonDecode(error?.respons.toString() ?? '');
+        final json = jsonDecode(error?.response.toString() ?? '');
         if (json == null) {
           message = status?.message;
         } else {

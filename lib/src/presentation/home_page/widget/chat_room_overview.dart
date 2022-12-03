@@ -24,7 +24,7 @@ class OverviewChatRoom extends StatelessWidget {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(chatRoom.avatar ??
+                        backgroundImage: NetworkImage(chatRoom.avatarUri ??
                             'https://as1.ftcdn.net/v2/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg'),
                         radius: 25.r,
                       ),
@@ -35,7 +35,7 @@ class OverviewChatRoom extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            chatRoom.name ?? '',
+                            chatRoom.name,
                             style:
                                 Theme.of(context).textTheme.bodyText1,
                           ),
@@ -43,7 +43,7 @@ class OverviewChatRoom extends StatelessWidget {
                             height: 4.h,
                           ),
                           Text(
-                            chatRoom.lastMessage?.conttent ?? '',
+                            chatRoom.lastMessage?.content ?? 'Chưa có tin nhắn nào',
                             style:
                                 Theme.of(context).textTheme.bodyText2,
                           ),

@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageWidget extends StatelessWidget {
-  const MessageWidget(
-      {Key? key, required this.message})
-      : super(key: key);
+  const MessageWidget({Key? key, required this.message}) : super(key: key);
 
-   final Message message;
+  final Message message;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +38,7 @@ class MessageWidget extends StatelessWidget {
                     ])
                   : null),
           child: Text(
-            message.conttent ?? '',
+            message.content,
             style: Theme.of(context).textTheme.bodyText2?.copyWith(
                 color: message.isSender != null && message.isSender!
                     ? Theme.of(context).scaffoldBackgroundColor

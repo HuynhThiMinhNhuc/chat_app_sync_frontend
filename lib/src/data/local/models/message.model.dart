@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class MessageModel {
   final int localId;
   final int? id;
@@ -12,20 +14,24 @@ class MessageModel {
     required this.content,
     required this.createdById,
     required this.roomId,
-    this.id,
+    required this.id,
   });
 
   // Convert a Dog into a Map. The keys must correspond to the names of the
   // columns in the database.
-  Map<String, dynamic> toMap() {
-    return {
-      'localId': localId,
+  Map<String, dynamic> toJson() {
+    var result = {
       'createdAt': createdAt,
       'content': content,
       'createdById': createdById,
       'roomId': roomId,
       'id': id,
     };
+    if (localId > 0) {
+      result.addAll({'localId': localId});
+    }
+
+    return result;
   }
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
@@ -36,4 +42,9 @@ class MessageModel {
         roomId: json['roomId'],
         id: json['id'],
       );
+
+      @override
+  String toString() {
+    return jsonEncode(toJson());
+  }
 }

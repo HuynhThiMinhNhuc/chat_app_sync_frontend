@@ -39,10 +39,9 @@ class StorageService {
 }
 
 extension StorageServiceExt on StorageService {
-   Future<String?> get apiToken async =>
+  Future<String?> get apiToken async =>
       await _secureStorage.read(key: AppConstant.apiKey);
 
-  setApiToken(String? apiToken) async {
-    await _secureStorage.write(key: AppConstant.apiKey, value: apiToken);
-  }
+  Future<void> setApiToken(String? apiToken) =>
+      _secureStorage.write(key: AppConstant.apiKey, value: apiToken);
 }

@@ -3,6 +3,9 @@ import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/data/enum/message_status.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/mock/message.dart';
+import 'package:chat_app_sync/src/data/model/user.dart';
+import 'package:chat_app_sync/src/data/repository/chat_repository.dart';
+import 'package:chat_app_sync/src/data/repository/room_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -14,6 +17,11 @@ class ChatRoomController extends GetxController {
   final isError = false.obs;
   final isLoading = false.obs;
   final nextPageTrigger = 7;
+
+  final listMessage = <Message>[];
+  final ChatRepository chatRepository;
+
+  ChatRoomController(this.chatRepository);
 
   @override
   void onInit() async {
@@ -28,58 +36,57 @@ class ChatRoomController extends GetxController {
   
 
   //TODO: get data from server
-  final listMessage = [
-    Message(
-        conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'hello',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'How are you?',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-    Message(
-        conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-    Message(
-        conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'hello',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'How are you?',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-    Message(
-        conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-    Message(
-        conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'hello',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'How are you?',
-        messageStatus: MessageStatus.viewed,
-         sender: AppManager().currentUser),
-    Message(
-        conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-    Message(
-        conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser)
-  ].obs;
+  // final listMessage = [
+  //   Message(
+  //       conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'hello',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'How are you?',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'hello',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'How are you?',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'hello',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'How are you?',
+  //       messageStatus: MessageStatus.viewed,
+  //        sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
+  //   Message(
+  //       conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser)
+  // ].obs;
 
- 
   getListMessLength(){
     return listMessage.length + (isLastPage.value ? 0 :1);
   }
@@ -89,8 +96,9 @@ class ChatRoomController extends GetxController {
     //TODO: fetch next fragment data when user scroll
     try {
       await Future.delayed(const Duration(seconds: 5));
-      final newMess = listMessageMock;
-      isLastPage.value = newMess.length < AppConstant.pageSize;
+      // final newMess = listMessageMock;
+      final newMess = <Message>[];
+      isLastPage.value = newMess.length < AppConstant.defaultPageSize;
       isLoading.value = false;
       pageNumber.value +=1;
       listMessage.insertAll(0, newMess);
@@ -101,8 +109,8 @@ class ChatRoomController extends GetxController {
   }
 
   onSentMessage(BuildContext context) {
-    final newessage =
-        Message(conttent: inputTextEditingController.text, sender: AppManager().currentUser);
+    var currentUser = AppManager().currentUser!;
+    final newessage = Message.withContent(inputTextEditingController.text, User.fromAccount(currentUser));
     listMessage.add(newessage);
     inputTextEditingController.text = '';
     FocusScope.of(context).unfocus();

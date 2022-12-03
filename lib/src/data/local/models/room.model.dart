@@ -13,8 +13,8 @@ class RoomChatModel {
     this.avatarUri,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toJson() {
+   return {
       'id': id,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
