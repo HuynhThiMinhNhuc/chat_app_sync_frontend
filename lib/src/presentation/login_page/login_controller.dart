@@ -1,9 +1,5 @@
-import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
-import 'package:chat_app_sync/src/common/network/api_response.dart';
 import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
-import 'package:chat_app_sync/src/data/authenticate/authenticate.dart';
-import 'package:chat_app_sync/src/data/local/models/my_account.model.dart';
 import 'package:chat_app_sync/src/data/repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -43,19 +39,14 @@ class LoginController extends GetxController {
     if (formKey.currentState == null) {
       AlertDialogWidget.show();
     } else if (formKey.currentState!.validate()) {
-      MyAccount account;
-      try {
-        account = await userRepository.login(
+      //TODO: resove logic and navigate to homepage
+      final loginRes = await userRepository.login(
           userNameTextEditingController.text,
-          passwordTextEditingController.text,
-        );
-
-        await AppManager().saveKeyAndCurrentInfor(account, account.token);
-
+          passwordTextEditingController.text);
+      if (loginRes.isSuccess()) {
         Get.toNamed(AppRoutes.homePage);
-      } catch (e) {
-        AlertDialogWidget.show(content: e.toString());
-        return;
+      } else {
+        AlertDialogWidget.show(content: loginRes.message);
       }
     }
   }
