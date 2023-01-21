@@ -1,11 +1,9 @@
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
-import 'package:chat_app_sync/src/data/enum/message_status.dart';
+import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
-import 'package:chat_app_sync/src/data/mock/message.dart';
 import 'package:chat_app_sync/src/data/model/user.dart';
 import 'package:chat_app_sync/src/data/repository/chat_repository.dart';
-import 'package:chat_app_sync/src/data/repository/room_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -18,14 +16,14 @@ class ChatRoomController extends GetxController {
   final isLoading = false.obs;
   final nextPageTrigger = 7;
 
-  final listMessage = <Message>[];
+  ChatRoom get room => Get.arguments["room"];
   final ChatRepository chatRepository;
 
   ChatRoomController(this.chatRepository);
 
   @override
   void onInit() async {
-   scrollController.addListener(() async => await fetchDataWhenScroll());
+    scrollController.addListener(() async => await fetchDataWhenScroll());
     super.onInit();
   }
 //  @override
@@ -33,7 +31,6 @@ class ChatRoomController extends GetxController {
 //      scrollController.addListener(() async => await fetchDataWhenScroll());
 //     super.onReady();
 //   }
-  
 
   //TODO: get data from server
   // final listMessage = [
@@ -87,8 +84,8 @@ class ChatRoomController extends GetxController {
   //       conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser)
   // ].obs;
 
-  getListMessLength(){
-    return listMessage.length + (isLastPage.value ? 0 :1);
+  getListMessLength() {
+    return room.listMessage.length + (isLastPage.value ? 0 : 1);
   }
 
   fetchData() async {
@@ -100,8 +97,8 @@ class ChatRoomController extends GetxController {
       final newMess = <Message>[];
       isLastPage.value = newMess.length < AppConstant.defaultPageSize;
       isLoading.value = false;
-      pageNumber.value +=1;
-      listMessage.insertAll(0, newMess);
+      pageNumber.value += 1;
+      room.listMessage.insertAll(0, newMess);
     } catch (e) {
       isError.value = true;
       isLoading.value = false;
@@ -110,19 +107,17 @@ class ChatRoomController extends GetxController {
 
   onSentMessage(BuildContext context) {
     var currentUser = AppManager().currentUser!;
-    final newessage = Message.withContent(inputTextEditingController.text, User.fromAccount(currentUser));
-    listMessage.add(newessage);
+    final newessage = Message.withContent(room.id,
+        inputTextEditingController.text, User.fromAccount(currentUser));
+    room.listMessage.add(newessage);
     inputTextEditingController.text = '';
     FocusScope.of(context).unfocus();
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
-  fetchDataWhenScroll() async{
-    if (scrollController.offset <=
-            scrollController.position.minScrollExtent ) {
+  fetchDataWhenScroll() async {
+    if (scrollController.offset <= scrollController.position.minScrollExtent) {
       await fetchData();
     }
   }
-
-
 }

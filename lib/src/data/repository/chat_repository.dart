@@ -26,6 +26,10 @@ class ChatRepository {
   }
 
   Future<void> sendMessage(Message message, int roomId) async {
-    return _localDatasource.upsertMessage([message.asEntity(roomId)]);
+    return _localDatasource.upsertMessage([message.asEntity()]);
+  }
+
+  Future<void> receiveMessages(List<Message> listMessage) {
+    return _localDatasource.upsertMessage(List.of(listMessage.map((message) => message.asEntity())));
   }
 }

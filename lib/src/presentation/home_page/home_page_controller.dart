@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
 import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
+import 'package:chat_app_sync/src/data/repository/chat_repository.dart';
 import 'package:chat_app_sync/src/data/repository/room_repository.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -10,9 +13,11 @@ class HomePageController extends GetxController {
   final paggingController = PagingController<int, ChatRoom>(firstPageKey: 1);
   final int numberPerLoad;
   final RoomRepository roomRepository;
-  final Map<int, ChatRoom> listChatRoom = {};
+  final ChatRepository chatRepository;
+  Map<int, ChatRoom> listChatRoom = {};
+  int get currentNumberPage => listChatRoom.length ~/ numberPerLoad;
 
-  HomePageController(this.roomRepository,
+  HomePageController(this.roomRepository, this.chatRepository,
       [this.numberPerLoad = AppConstant.defaultPageSize]);
 
   //TODO: Get list chatroom from server
@@ -69,14 +74,26 @@ class HomePageController extends GetxController {
 
   bool ifLastPage(int length) => length < numberPerLoad;
 
-  // fectchFirstPage() => fectchPage(1);
-
   Future<void> fectchPage(int pageKey) async {
-    final rooms = await roomRepository.getRooms(pageKey, numberPerLoad);
+    final rooms =
+        await roomRepository.getRooms(currentNumberPage + 1, numberPerLoad);
+    var newRooms = <ChatRoom>[];
     for (var room in rooms) {
       if (!listChatRoom.containsKey(room.id)) {
+        newRooms.add(room);
         listChatRoom.addAll({room.id: room});
       }
     }
+    paggingController.appendPage(newRooms, currentNumberPage + 1);
+  }
+
+  FutureOr<void> receiveMessageOfRoom(ChatRoom room) {
+    if (listChatRoom.containsKey(room.id)) {
+      listChatRoom[room.id]!.listMessage.addAll(room.listMessage);
+    } else {
+      listChatRoom.addAll({room.id: room});
+      roomRepository.createRoom(room);
+    }
+    chatRepository.receiveMessages(room.listMessage);
   }
 }

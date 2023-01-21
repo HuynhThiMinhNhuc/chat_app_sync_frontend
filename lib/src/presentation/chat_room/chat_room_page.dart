@@ -49,7 +49,7 @@ class ChatRoomPage extends GetView<ChatRoomController> {
   }
 
   Widget _builtMessageView() {
-    if (controller.listMessage.isEmpty) {
+    if (controller.room.listMessage.isEmpty) {
       if (controller.isLoading.value) {
         return Padding(
           padding: EdgeInsets.all(8.r),
@@ -63,9 +63,9 @@ class ChatRoomPage extends GetView<ChatRoomController> {
     return Expanded(
         child: Obx(() => ListView.builder(
             controller: controller.scrollController,
-            itemCount: controller.listMessage.length,
+            itemCount: controller.room.listMessage.length,
             itemBuilder: (context, index) {
-              return MessageWidget(message: controller.listMessage[index]);
+              return MessageWidget(message: controller.room.listMessage[index]);
             })));
   }
 }
