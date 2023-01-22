@@ -11,7 +11,7 @@ class MessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: message.isSender != null && message.isSender!
+      mainAxisAlignment: message.isSender
           ? MainAxisAlignment.end
           : MainAxisAlignment.start,
       children: [
@@ -21,17 +21,17 @@ class MessageWidget extends StatelessWidget {
           width: AppConstant.width / 2,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
-                topLeft: message.isSender != null && message.isSender!
+                topLeft: message.isSender
                     ? Radius.circular(10.r)
                     : Radius.zero,
-                topRight: message.isSender != null && message.isSender!
+                topRight: message.isSender
                     ? Radius.zero
                     : Radius.circular(10.r),
                 bottomLeft: Radius.circular(10.r),
                 bottomRight: Radius.circular(10.r),
               ),
               color: Theme.of(context).scaffoldBackgroundColor,
-              gradient: message.isSender != null && message.isSender!
+              gradient: message.isSender
                   ? LinearGradient(colors: [
                       Theme.of(context).errorColor,
                       Theme.of(context).secondaryHeaderColor
@@ -40,7 +40,7 @@ class MessageWidget extends StatelessWidget {
           child: Text(
             message.content,
             style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                color: message.isSender != null && message.isSender!
+                color:message.isSender
                     ? Theme.of(context).scaffoldBackgroundColor
                     : Theme.of(context).canvasColor),
           ),

@@ -1,5 +1,6 @@
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/common/network/api_exception.dart';
+import 'package:chat_app_sync/src/common/network/api_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -17,6 +18,7 @@ class ApiProvider {
 
 
     _dio = Dio(dioOptions);
+    _dio.interceptors.add(ApiInterceptor());
 
     if (kDebugMode) {
       _dio.interceptors.add(PrettyDioLogger(

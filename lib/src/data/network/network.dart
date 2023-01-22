@@ -46,7 +46,7 @@ class NetworkDatasource {
       Map<String, dynamic> params) async {
     try {
       final res =
-          await _apiProvider.get(AppConstant.sendMessageUrl, params: params);
+          await _apiProvider.get(AppConstant.getMessageUrl, params: params);
       return ResponseData.success(res['data'], response: res);
     } catch (e) {
       return ResponseData.failed(e);

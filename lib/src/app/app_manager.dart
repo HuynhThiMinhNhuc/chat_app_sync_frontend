@@ -10,19 +10,19 @@ class AppManager {
 
   AppManager._internal();
 
-  Map<String, String>? authHeader;
+  final Map<String, String> authHeader = <String, String>{};
   MyAccount? _currentUser;
   MyAccount? get currentUser => _currentUser;
 
-  isSignIn() => _currentUser != null;
+  isSignIn() => currentUser != null;
 
   Future<void> saveKeyAndCurrentInfor(MyAccount? user, String? token) async {
     _currentUser = user;
     await _storageService.setApiToken(token);
     if (token == null) {
-      authHeader?.remove('token');
+      authHeader.remove('token');
     } else {
-      authHeader?.addAll({'token': token});
+      authHeader.addAll({'token': token});
     }
   }
 
