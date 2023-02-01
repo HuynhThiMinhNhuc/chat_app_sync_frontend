@@ -15,8 +15,6 @@ import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AppBinding().dependencies();
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   await ScreenUtil.ensureScreenSize();
   runApp(const ChatAppSync());
 }

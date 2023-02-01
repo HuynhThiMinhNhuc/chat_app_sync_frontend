@@ -10,13 +10,13 @@ import 'package:get/get.dart';
 class ChatRoomController extends GetxController {
   final inputTextEditingController = TextEditingController();
   final scrollController = ScrollController();
-  final isLastPage = false.obs;
-  final pageNumber = 0.obs;
-  final isError = false.obs;
-  final isLoading = false.obs;
-  final nextPageTrigger = 7;
+  var isLastPage = false.obs;
+  var pageNumber = 0.obs;
+  var isError = false.obs;
+  var isLoading = false.obs;
+  var nextPageTrigger = 7;
 
-  ChatRoom get room => Get.arguments["room"];
+  Rx<ChatRoom> room = Get.arguments;
   final ChatRepository chatRepository;
 
   ChatRoomController(this.chatRepository);
@@ -85,31 +85,31 @@ class ChatRoomController extends GetxController {
   // ].obs;
 
   getListMessLength() {
-    return room.listMessage.length + (isLastPage.value ? 0 : 1);
+    return room.value.listMessage.length + (isLastPage.value ? 0 : 1);
   }
 
   fetchData() async {
-    isLoading.value = true;
+    isLoading = true.obs;
     //TODO: fetch next fragment data when user scroll
     try {
       await Future.delayed(const Duration(seconds: 5));
       // final newMess = listMessageMock;
       final newMess = <Message>[];
-      isLastPage.value = newMess.length < AppConstant.defaultPageSize;
-      isLoading.value = false;
-      pageNumber.value += 1;
-      room.listMessage.insertAll(0, newMess);
+      isLastPage = (newMess.length < AppConstant.defaultPageSize).obs;
+      pageNumber += 1;
+      room.value.listMessage.insertAll(0, newMess);
     } catch (e) {
-      isError.value = true;
-      isLoading.value = false;
+      isError = true.obs;
+    } finally {
+      isLoading = false.obs;
     }
   }
 
   onSentMessage(BuildContext context) {
     var currentUser = AppManager().currentUser!;
-    final newessage = Message.withContent(room.id,
+    final newessage = Message.withContent(room.value.id,
         inputTextEditingController.text, User.fromAccount(currentUser));
-    room.listMessage.add(newessage);
+    room.value.listMessage.add(newessage);
     inputTextEditingController.text = '';
     FocusScope.of(context).unfocus();
     scrollController.jumpTo(scrollController.position.maxScrollExtent);

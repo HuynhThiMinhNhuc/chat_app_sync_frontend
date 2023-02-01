@@ -25,8 +25,8 @@ class RoomChatModel {
 
   factory RoomChatModel.fromJson(Map<String, dynamic> json) => RoomChatModel(
         id: json['id'],
-        createdAt: json['createdAt'],
-        updatedAt: json['updatedAt'],
+        createdAt: DateTime.parse(json['createdAt'].toString()),
+        updatedAt: DateTime.parse(json['updatedAt'].toString()),
         name: json['name'],
         avatarUri: json['avatarUri'],
       );

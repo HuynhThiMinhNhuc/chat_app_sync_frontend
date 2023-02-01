@@ -27,12 +27,12 @@ class HomePage extends GetView<HomePageController> {
           color: Theme.of(context).scaffoldBackgroundColor,
           onRefresh: () =>
               Future.sync(() => controller.paggingController.refresh()),
-          child: PagedListView<int, ChatRoom>(
+          child: PagedListView<int, Rx<ChatRoom>>(
             pagingController: controller.paggingController,
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-            builderDelegate: PagedChildBuilderDelegate<ChatRoom>(
+            builderDelegate: PagedChildBuilderDelegate<Rx<ChatRoom>>(
                 animateTransitions: true,
-                itemBuilder: (context, item, index) => OverviewChatRoom(chatRoom: item, onTap:()=> controller.onTapOverViewChat(item),)),
+                itemBuilder: (context, item, index) => OverviewChatRoom(chatRoom: item.value, onTap:()=> controller.onTapOverViewChat(item),)),
           ),
         ));
   }

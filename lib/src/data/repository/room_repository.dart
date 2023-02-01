@@ -4,6 +4,7 @@ import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/model/user.dart';
 import 'package:chat_app_sync/src/data/network/network.dart';
+import 'package:get/get.dart';
 import 'package:workmanager/workmanager.dart';
 
 class RoomRepository {
@@ -36,9 +37,9 @@ class RoomRepository {
       var setUser = Map.fromIterable(users, key: (user) => user.id);
 
       room.listMessage = List.of(messageDbs.map((message) =>
-          Message.fromEntity(message, setUser[message.createdById])));
+          Message.fromEntity(message, setUser[message.createdById]))).obs;
       room.listJoiner =
-          Map.fromIterable(users.map(User.fromEntity), key: (user) => user.id);
+          Map<int, User>.fromIterable(users.map(User.fromEntity), key: (user) => user.id).obs;
 
       rooms.add(room);
     }

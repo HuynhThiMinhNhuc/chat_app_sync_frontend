@@ -2,13 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:chat_app_sync/src/data/local/const.dart';
 import 'package:chat_app_sync/src/data/local/models/user.model.dart';
+import 'package:chat_app_sync/src/data/local/samples/sample.dart';
 import 'package:path/path.dart';
 import 'package:chat_app_sync/src/data/local/models/message.model.dart';
 import 'package:chat_app_sync/src/data/local/models/my_account.model.dart';
 import 'package:chat_app_sync/src/data/local/models/room.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:flutter/services.dart';
 
 class LocalDatasource {
   Database? _instance;
@@ -56,6 +56,10 @@ class LocalDatasource {
         await db.execute(createAccount);
         await db.execute(createRoom);
         await db.execute(createMessage);
+
+        await db.execute(sampleUsers);
+        await db.execute(sampleRooms);
+        await db.execute(sampleMessages);
       },
       // onDowngrade: (db, oldVersion, newVersion) => db.execute(dropAllTable),
       version: 1,
@@ -118,10 +122,10 @@ class LocalDatasource {
       FROM "Message"
       WHERE "roomId" = ?
       ORDER BY "createdAt" DESC
-      OFFSET ?
       LIMIT ?
+      OFFSET ?
       ''',
-      [roomId, (page - 1) * pageSize, pageSize],
+      [roomId, pageSize, (page - 1) * pageSize],
     );
     return List.from(messages.map(MessageModel.fromJson));
   }
@@ -145,9 +149,9 @@ class LocalDatasource {
       '''
       SELECT *
       FROM "User"
-      WHERE "id" in ?
+      WHERE "id" in (${List.filled(userIds.length, '?').join(',')})
       ''',
-      [userIds],
+      userIds,
     );
     return List.from(users.map(UserModel.fromJson));
   }

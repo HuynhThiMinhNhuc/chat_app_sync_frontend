@@ -36,7 +36,7 @@ class MessageModel {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
         localId: json['localId'],
-        createdAt: json['createdAt'],
+        createdAt: DateTime.parse(json['createdAt'].toString()) ,
         content: json['content'],
         createdById: json['createdById'],
         roomId: json['roomId'],

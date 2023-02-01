@@ -2,6 +2,7 @@ import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class OverviewChatRoom extends StatelessWidget {
   final ChatRoom chatRoom;
@@ -24,7 +25,7 @@ class OverviewChatRoom extends StatelessWidget {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(chatRoom.avatarUri ??
+                        backgroundImage: NetworkImage(chatRoom.avatarUri.value ??
                             'https://as1.ftcdn.net/v2/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg'),
                         radius: 25.r,
                       ),
@@ -35,7 +36,7 @@ class OverviewChatRoom extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            chatRoom.name,
+                            chatRoom.name.value,
                             style:
                                 Theme.of(context).textTheme.bodyText1,
                           ),
@@ -43,7 +44,7 @@ class OverviewChatRoom extends StatelessWidget {
                             height: 4.h,
                           ),
                           Text(
-                            chatRoom.lastMessage?.content ?? 'Chưa có tin nhắn nào',
+                            chatRoom.lastMessage.value?.content ?? 'Chưa có tin nhắn nào',
                             style:
                                 Theme.of(context).textTheme.bodyText2,
                           ),

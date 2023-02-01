@@ -1,16 +1,17 @@
 import 'package:chat_app_sync/src/data/local/models/room.model.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/model/user.dart';
+import 'package:get/get.dart';
 
 class ChatRoom {
   final int id;
-  final String name;
-  final String? avatarUri;
+  final Rx<String> name;
+  final Rx<String?> avatarUri;
   final DateTime createdAt;
   final DateTime updatedAt;
-  List<Message> listMessage;
-  Map<int, User> listJoiner;
-  Message? get lastMessage => listMessage.last;
+  RxList<Message> listMessage;
+  RxMap<int, User> listJoiner;
+  Rx<Message?> get lastMessage => listMessage.isEmpty ? null.obs : listMessage.last.obs;
 
   ChatRoom({
     required this.id,
@@ -18,8 +19,8 @@ class ChatRoom {
     required this.name,
     required this.createdAt,
     required this.updatedAt,
-    this.listJoiner = const <int, User>{},
-    this.listMessage = const <Message>[],
+    required this.listJoiner,
+    required this.listMessage,
   });
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) => ChatRoom(
@@ -32,17 +33,24 @@ class ChatRoom {
             ? DateTime.parse(json['updatedAt'])
             : DateTime.now(),
         avatarUri: json['avatarUri'],
-        listMessage: List.of(
-            (json['messages'] as List<Map<String, dynamic>>)
-                .map(Message.fromJson)),
+        listMessage: List.of((json['messages'] as List<Map<String, dynamic>>)
+                .map(Message.fromJson))
+            .obs,
+        listJoiner: {
+          for (var element in (json['joiners'] as List<Map<String, dynamic>>)
+              .map(User.fromJson))
+            element.id: element
+        }.obs,
       );
 
   factory ChatRoom.fromEntity(RoomChatModel room) => ChatRoom(
         id: room.id,
-        avatarUri: room.avatarUri,
-        name: room.name,
+        avatarUri: room.avatarUri.obs,
+        name: room.name.obs,
         createdAt: room.createdAt,
         updatedAt: room.updatedAt,
+        listJoiner: <int, User>{}.obs,
+        listMessage: <Message>[].obs,
       );
 
   addOrReplaceMessage(Message newMessage) {
@@ -60,6 +68,6 @@ class ChatRoom {
         id: id,
         createdAt: createdAt,
         updatedAt: updatedAt,
-        name: name,
+        name: name.value,
       );
 }
