@@ -3,17 +3,19 @@ import 'dart:async';
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
 import 'package:chat_app_sync/src/data/model/chat_room.dart';
+import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/repository/chat_repository.dart';
 import 'package:chat_app_sync/src/data/repository/room_repository.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HomePageController extends GetxController {
-  final paggingController = PagingController<int, Rx<ChatRoom>>(firstPageKey: 1);
+  final paggingController =
+      PagingController<int, Rx<ChatRoom>>(firstPageKey: 1);
   final int numberPerLoad;
   final RoomRepository roomRepository;
   final ChatRepository chatRepository;
-  Map<int, ChatRoom> listChatRoom = <int, ChatRoom>{};
+  final listChatRoom = <int, ChatRoom>{}.obs;
   int get currentNumberPage => listChatRoom.length ~/ numberPerLoad;
 
   HomePageController(this.roomRepository, this.chatRepository,
@@ -60,5 +62,14 @@ class HomePageController extends GetxController {
       roomRepository.createRoom(room);
     }
     chatRepository.receiveMessages(room.listMessage);
+  }
+
+  addNewMessage(int roomId, Message newMess) {
+    for (int i = 0; i < listChatRoom.length; ++i) {
+      if (listChatRoom[i]?.id == roomId) {
+        listChatRoom[i]?.listMessage.add(newMess);
+        listChatRoom.refresh();
+      }
+    }
   }
 }

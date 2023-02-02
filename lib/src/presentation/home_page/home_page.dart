@@ -32,9 +32,11 @@ class HomePage extends GetView<HomePageController> {
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
             builderDelegate: PagedChildBuilderDelegate<Rx<ChatRoom>>(
                 animateTransitions: true,
-                itemBuilder: (context, item, index) => OverviewChatRoom(chatRoom: item.value, onTap:()=> controller.onTapOverViewChat(item),)),
+                itemBuilder: (context, item, index) => OverviewChatRoom(
+                      chatRoom: item.value,
+                      onTap: () => controller.onTapOverViewChat(item),
+                    )),
           ),
         ));
   }
 }
-

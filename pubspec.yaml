@@ -28,6 +28,7 @@ dependencies:
   sqflite:
 #workmanager
   workmanager: ^0.5.1
+  cached_network_image: ^3.2.3
   
 dev_dependencies:
 #test

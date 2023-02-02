@@ -5,6 +5,8 @@ import 'package:chat_app_sync/src/presentation/home_page/home_page.dart';
 import 'package:chat_app_sync/src/presentation/home_page/home_page_binding.dart';
 import 'package:chat_app_sync/src/presentation/login_page/login_binding.dart';
 import 'package:chat_app_sync/src/presentation/login_page/login_page.dart';
+import 'package:chat_app_sync/src/presentation/search_page/search_page.dart';
+import 'package:chat_app_sync/src/presentation/search_page/search_page_binding.dart';
 import 'package:get/get.dart';
 
 class AppPages {
@@ -20,6 +22,10 @@ class AppPages {
     GetPage(
         name: AppRoutes.chatRoom,
         page: () => const ChatRoomPage(),
-        binding: ChatRoomBinding())
+        binding: ChatRoomBinding()),
+    GetPage(
+        name: AppRoutes.searchPage,
+        page: () => const SearchPage(),
+        binding: SearchPageBinding())
   ];
 }

@@ -1,5 +1,6 @@
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
+import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
 import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/model/user.dart';
@@ -9,6 +10,8 @@ import 'package:get/get.dart';
 
 class ChatRoomController extends GetxController {
   final inputTextEditingController = TextEditingController();
+  final searchTextEditingController = TextEditingController();
+  final searchKey = ''.obs;
   final scrollController = ScrollController();
   var isLastPage = false.obs;
   var pageNumber = 0.obs;
@@ -118,6 +121,17 @@ class ChatRoomController extends GetxController {
   fetchDataWhenScroll() async {
     if (scrollController.offset <= scrollController.position.minScrollExtent) {
       await fetchData();
+    }
+  }
+
+  onNavigateSearchPage() {
+    Get.toNamed(AppRoutes.searchPage,
+        arguments: searchTextEditingController.text);
+  }
+
+  onChangeKeySearch(String? value) {
+    if (value != null) {
+      searchKey.value = value;
     }
   }
 }

@@ -25,6 +25,64 @@ class ChatRoomPage extends GetView<ChatRoomController> {
             Theme.of(context).errorColor,
             Theme.of(context).secondaryHeaderColor
           ]))),
+          actions: [
+            IconButton(
+                onPressed: () => {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text(
+                                  'Search in conversation',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      ?.copyWith(
+                                          color: Theme.of(context)
+                                              .backgroundColor),
+                                ),
+                                content: TextField(
+                                  controller:
+                                      controller.searchTextEditingController,
+                                  onChanged: controller.onChangeKeySearch,
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () => Get.back(),
+                                      child: Text(
+                                        'Cancel',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            ?.copyWith(
+                                                color: Theme.of(context)
+                                                    .errorColor),
+                                      )),
+                                  Obx(() => TextButton(
+                                      onPressed:
+                                          controller.searchKey.value.isNotEmpty
+                                              ? controller.onNavigateSearchPage
+                                              : null,
+                                      child: Text(
+                                        'Search',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            ?.copyWith(
+                                                color: controller.searchKey
+                                                        .value.isNotEmpty
+                                                    ? Theme.of(context)
+                                                        .backgroundColor
+                                                    : Theme.of(context)
+                                                        .hintColor),
+                                      )))
+                                ],
+                              ))
+                    },
+                icon: Icon(
+                  Icons.search,
+                  size: 24.r,
+                ))
+          ],
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -32,12 +90,10 @@ class ChatRoomPage extends GetView<ChatRoomController> {
             SizedBox(
               height: 16.h,
             ),
-            Obx(() =>Visibility(
-              visible: controller.isLoading.value,
-              child: const CircularProgressIndicator()) )
-            ,
-            Obx((() => _builtMessageView()))
-            ,
+            Obx(() => Visibility(
+                visible: controller.isLoading.value,
+                child: const CircularProgressIndicator())),
+            Obx((() => _builtMessageView())),
             ChatInputField(
               controller: controller.inputTextEditingController,
               onSendMess: () => controller.onSentMessage(context),
@@ -65,7 +121,8 @@ class ChatRoomPage extends GetView<ChatRoomController> {
             controller: controller.scrollController,
             itemCount: controller.room.value.listMessage.length,
             itemBuilder: (context, index) {
-              return MessageWidget(message: controller.room.value.listMessage[index]);
+              return MessageWidget(
+                  message: controller.room.value.listMessage[index]);
             })));
   }
 }
