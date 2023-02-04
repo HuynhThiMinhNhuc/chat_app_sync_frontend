@@ -25,7 +25,7 @@ class ChatRepository {
     return List.of(messageDbs.map((message) => Message.fromEntity(message, setUsers[message.createdById])));
   }
 
-  Future<void> sendMessage(Message message, int roomId) async {
+  Future<void> sendMessage(Message message) async {
     return _localDatasource.upsertMessage([message.asEntity()]);
   }
 

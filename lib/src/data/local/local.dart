@@ -29,7 +29,7 @@ class LocalDatasource {
     var path = join(databasesPath, "chat_app.db");
 
     // delete existing if any
-    await deleteDatabase(path);
+    // await deleteDatabase(path);
 
     // Check if the database exists
     var exists = await databaseExists(path);
@@ -57,9 +57,9 @@ class LocalDatasource {
         await db.execute(createRoom);
         await db.execute(createMessage);
 
-        await db.execute(sampleUsers);
-        await db.execute(sampleRooms);
-        await db.execute(sampleMessages);
+        // await db.execute(sampleUsers);
+        // await db.execute(sampleRooms);
+        // await db.execute(sampleMessages);
       },
       // onDowngrade: (db, oldVersion, newVersion) => db.execute(dropAllTable),
       version: 1,
@@ -96,10 +96,20 @@ class LocalDatasource {
   Future<List<RoomChatModel>> getRooms(int page, int pageSize) async {
     var rooms = await instance.rawQuery(
       '''
-      SELECT r.*, (CASE WHEN m.id ISNULL THEN m."createdAt" ELSE r."updatedAt" END) as lastMessageTime
+      WITH rs as (SELECT r.*, 
+      (
+        SELECT (CASE WHEN m.id IS NOT NULL THEN m."createdAt" ELSE r."updatedAt" END)
+        FROM "Message" as m 
+        WHERE TRUE
+        AND m."roomId" = r."id"
+        ORDER BY m."localId" DESC
+        LIMIT 1
+      ) as lastMessageTime
       FROM "RoomChat" as r
-      LEFT JOIN "Message" as m ON m."roomId" = r."id"
-      ORDER BY lastMessageTime DESC
+      )
+      SELECT * 
+      FROM rs 
+      ORDER BY lastMessageTime DESC 
       LIMIT ?
       OFFSET ?
       ''',
@@ -121,7 +131,7 @@ class LocalDatasource {
       SELECT *
       FROM "Message"
       WHERE "roomId" = ?
-      ORDER BY "createdAt" DESC
+      ORDER BY "localId" DESC
       LIMIT ?
       OFFSET ?
       ''',

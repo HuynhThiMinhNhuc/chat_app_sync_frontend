@@ -111,11 +111,11 @@ class ChatRoomController extends GetxController {
 
   Future<void> onSentMessage(BuildContext context) async {
     var currentUser = AppManager().currentUser!;
-    final newessage = Message.withContent(room.value.id,
+    final newMessage = Message.withContent(room.value.id,
         inputTextEditingController.text, User.fromAccount(currentUser));
 
-    await chatRepository.sendMessage(newessage, room.value.id);
-    room.value.listMessage.add(newessage);
+    await chatRepository.sendMessage(newMessage);
+    room.value.addOrReplaceMessage(newMessage);
   }
 
   fetchDataWhenScroll() async {
