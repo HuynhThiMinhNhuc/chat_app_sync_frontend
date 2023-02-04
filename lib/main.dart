@@ -13,17 +13,44 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:workmanager/workmanager.dart';
 
+import 'src/common/network/api_provider.dart';
+import 'src/data/local/local.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final apiProvider = ApiProvider();
+  final networkDatasource = NetworkDatasource(apiProvider);
+  final localDatasource = LocalDatasource();
+  await localDatasource.ensureInitialized();
+
+  // AppBinding().dependencies();
   await ScreenUtil.ensureScreenSize();
-  runApp(const ChatAppSync());
+  runApp(ChatAppSync(
+    apiProvider: apiProvider,
+    localDatasource: localDatasource,
+    networkDatasource: networkDatasource,
+  ));
 }
 
 class ChatAppSync extends StatelessWidget {
-  const ChatAppSync({super.key});
+  late final ApiProvider apiProvider;
+  late final NetworkDatasource networkDatasource;
+  late final LocalDatasource localDatasource;
+
+  ChatAppSync({super.key, 
+    required ApiProvider apiProvider,
+    required NetworkDatasource networkDatasource,
+    required LocalDatasource localDatasource,
+  }){
+    this.apiProvider = Get.put(apiProvider);
+    this.networkDatasource = Get.put(networkDatasource);
+    this.localDatasource = Get.put(localDatasource);
+  }
 
   @override
   Widget build(BuildContext context) {
+    Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
     return ScreenUtilInit(
         builder: ((context, child) => GetMaterialApp(
               title: 'Chat app sync',

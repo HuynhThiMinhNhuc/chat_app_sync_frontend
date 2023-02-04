@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 const createMessage = """
 CREATE TABLE IF NOT EXISTS "Message" (
     "localId" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "id" INTEGER NOT NULL,
+    "id" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "content" TEXT NOT NULL,
     "createdById" INTEGER NOT NULL,

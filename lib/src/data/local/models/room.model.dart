@@ -16,8 +16,8 @@ class RoomChatModel {
   Map<String, dynamic> toJson() {
    return {
       'id': id,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
       'name': name,
       'avatarUri': avatarUri,
     };

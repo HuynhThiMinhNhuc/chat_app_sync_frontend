@@ -64,12 +64,12 @@ class HomePageController extends GetxController {
     chatRepository.receiveMessages(room.listMessage);
   }
 
-  addNewMessage(int roomId, Message newMess) {
-    for (int i = 0; i < listChatRoom.length; ++i) {
-      if (listChatRoom[i]?.id == roomId) {
-        listChatRoom[i]?.listMessage.add(newMess);
-        listChatRoom.refresh();
-      }
-    }
-  }
+  // addNewMessage(int roomId, Message newMess) {
+  //   for (int i = 0; i < listChatRoom.length; ++i) {
+  //     if (listChatRoom[i]?.id == roomId) {
+  //       listChatRoom[i]!.listMessage.add(newMess);
+  //       listChatRoom.refresh();
+  //     }
+  //   }
+  // }
 }

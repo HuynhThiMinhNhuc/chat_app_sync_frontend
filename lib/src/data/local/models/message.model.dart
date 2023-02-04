@@ -21,7 +21,7 @@ class MessageModel {
   // columns in the database.
   Map<String, dynamic> toJson() {
     var result = {
-      'createdAt': createdAt,
+      'createdAt': createdAt.toIso8601String(),
       'content': content,
       'createdById': createdById,
       'roomId': roomId,

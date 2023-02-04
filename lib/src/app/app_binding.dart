@@ -9,16 +9,9 @@ import 'package:get/get.dart';
 class AppBinding extends Bindings {
   @override
   void dependencies() {
-    final apiProvider = ApiProvider();
-    final networkDatasource = NetworkDatasource(apiProvider);
-    final localDatasource = LocalDatasource();
-
-    Get.put(apiProvider);
-    Get.put(networkDatasource);
-    Get.putAsync(() async {
-      await localDatasource.ensureInitialized();
-      return localDatasource;
-    });
+    // final apiProvider = Get.find<ApiProvider>();
+    final networkDatasource = Get.find<NetworkDatasource>();
+    final localDatasource = Get.find<LocalDatasource>();
 
     Get.put(UserRepository(
       networkDatasource: networkDatasource,

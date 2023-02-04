@@ -6,6 +6,7 @@ import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/model/user.dart';
 import 'package:chat_app_sync/src/data/repository/chat_repository.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatRoomController extends GetxController {
@@ -108,14 +109,13 @@ class ChatRoomController extends GetxController {
     }
   }
 
-  onSentMessage(BuildContext context) {
+  Future<void> onSentMessage(BuildContext context) async {
     var currentUser = AppManager().currentUser!;
     final newessage = Message.withContent(room.value.id,
         inputTextEditingController.text, User.fromAccount(currentUser));
+
+    await chatRepository.sendMessage(newessage, room.value.id);
     room.value.listMessage.add(newessage);
-    inputTextEditingController.text = '';
-    FocusScope.of(context).unfocus();
-    scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
   fetchDataWhenScroll() async {

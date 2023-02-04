@@ -96,7 +96,20 @@ class ChatRoomPage extends GetView<ChatRoomController> {
             Obx((() => _builtMessageView())),
             ChatInputField(
               controller: controller.inputTextEditingController,
-              onSendMess: () => controller.onSentMessage(context),
+              onSendMess: () async {
+                try {
+                  controller.onSentMessage(context);
+                  controller.inputTextEditingController.text = '';
+                  FocusScope.of(context).unfocus();
+                  controller.scrollController.jumpTo(
+                      controller.scrollController.position.maxScrollExtent);
+                } catch (e) {
+                  showDialog(
+                      context: context,
+                      builder: (context) =>
+                          const Text('Không thể gửi tin nhắn'));
+                }
+              },
             ),
           ]),
         ),
