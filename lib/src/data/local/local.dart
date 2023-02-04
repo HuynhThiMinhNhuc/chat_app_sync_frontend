@@ -29,7 +29,7 @@ class LocalDatasource {
     var path = join(databasesPath, "chat_app.db");
 
     // delete existing if any
-    // await deleteDatabase(path);
+    await deleteDatabase(path);
 
     // Check if the database exists
     var exists = await databaseExists(path);
@@ -57,9 +57,9 @@ class LocalDatasource {
         await db.execute(createRoom);
         await db.execute(createMessage);
 
-        // await db.execute(sampleUsers);
-        // await db.execute(sampleRooms);
-        // await db.execute(sampleMessages);
+        await db.execute(sampleUsers);
+        await db.execute(sampleRooms);
+        await db.execute(sampleMessages);
       },
       // onDowngrade: (db, oldVersion, newVersion) => db.execute(dropAllTable),
       version: 1,
