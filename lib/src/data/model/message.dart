@@ -39,7 +39,7 @@ class Message implements Comparable<Message> {
         id: json['id'],
         localId: json['localId'],
         roomId: json['roomId'],
-        createdAt: DateTime.parse(json['createdAt']),
+        createdAt: DateTime.parse(json['createdAt'].toString()),
         sender: User.fromJson(json['sender']),
         content: json['content'],
       );

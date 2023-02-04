@@ -114,8 +114,8 @@ class ChatRoomController extends GetxController {
     final newMessage = Message.withContent(room.value.id,
         inputTextEditingController.text, User.fromAccount(currentUser));
 
-    await chatRepository.sendMessage(newMessage, room.value.id);
-    room.value.listMessage.add(newMessage);
+    await chatRepository.sendMessage(newMessage);
+    room.value.addOrReplaceMessage(newMessage);
   }
 
   fetchDataWhenScroll() async {

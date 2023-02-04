@@ -11,7 +11,7 @@ class ChatRoom {
   final DateTime updatedAt;
   RxList<Message> listMessage;
   RxMap<int, User> listJoiner;
-  Rx<Message?> get lastMessage => listMessage.isEmpty ? null.obs : listMessage.last.obs;
+  Message? get lastMessage => listMessage.isEmpty ? null : listMessage.last;
 
   ChatRoom({
     required this.id,
@@ -27,10 +27,10 @@ class ChatRoom {
         id: json['id'],
         name: json['name'],
         createdAt: json['createdAt'] is String
-            ? DateTime.parse(json['createdAt'])
+            ? DateTime.parse(json['createdAt'].toString())
             : DateTime.now(),
         updatedAt: json['updatedAt'] is String
-            ? DateTime.parse(json['updatedAt'])
+            ? DateTime.parse(json['updatedAt'].toString())
             : DateTime.now(),
         avatarUri: json['avatarUri'],
         listMessage: List.of((json['messages'] as List<Map<String, dynamic>>)
@@ -58,10 +58,12 @@ class ChatRoom {
       if (message.identify == newMessage.identify) {
         continue;
       }
-      if (message.localId == newMessage.localId && message.localId != null) {
+      if (message.localId != null && message.localId == newMessage.localId) {
         message = newMessage;
+        return;
       }
     }
+    listMessage.insert(listMessage.length, newMessage);
   }
 
   RoomChatModel asEntity() => RoomChatModel(

@@ -1,3 +1,4 @@
+import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
 import 'package:chat_app_sync/src/presentation/chat_room/chat_room_controller.dart';
 import 'package:chat_app_sync/src/presentation/chat_room/widget/chat_input_field.dart';
 import 'package:chat_app_sync/src/presentation/chat_room/widget/message_widget.dart';
@@ -104,10 +105,7 @@ class ChatRoomPage extends GetView<ChatRoomController> {
                   controller.scrollController.jumpTo(
                       controller.scrollController.position.maxScrollExtent);
                 } catch (e) {
-                  showDialog(
-                      context: context,
-                      builder: (context) =>
-                          const Text('Không thể gửi tin nhắn'));
+                  AlertDialogWidget.show(content: 'Không thể gửi tin nhắn');
                 }
               },
             ),

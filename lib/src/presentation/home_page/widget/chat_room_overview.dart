@@ -2,6 +2,7 @@ import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class OverviewChatRoom extends StatelessWidget {
   final ChatRoom chatRoom;
@@ -38,11 +39,11 @@ class OverviewChatRoom extends StatelessWidget {
                       SizedBox(
                         height: 4.h,
                       ),
-                      Text(
-                        chatRoom.lastMessage.value?.content ??
-                            'Chưa có tin nhắn nào',
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
+                      Obx(() => Text(
+                            chatRoom.lastMessage?.content ??
+                                'Chưa có tin nhắn nào',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          )),
                     ],
                   )
                 ],
