@@ -11,7 +11,7 @@ class ChatRoom {
   final DateTime updatedAt;
   RxList<Message> listMessage;
   RxMap<int, User> listJoiner;
-  Message? get lastMessage => listMessage.isEmpty ? null : listMessage[0];
+  Message? get lastMessage => listMessage.isEmpty ? null : listMessage.last;
 
   ChatRoom({
     required this.id,
