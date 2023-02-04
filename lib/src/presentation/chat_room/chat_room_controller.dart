@@ -14,16 +14,16 @@ class ChatRoomController extends GetxController {
   final searchTextEditingController = TextEditingController();
   final searchKey = ''.obs;
   final scrollController = ScrollController();
-  var isLastPage = false.obs;
-  var pageNumber = 0.obs;
-  var isError = false.obs;
   var isLoading = false.obs;
   var nextPageTrigger = 7;
+  final int numberPerLoad;
+  int get currentNumberPage => room.value.listMessage.length ~/ numberPerLoad;
 
   Rx<ChatRoom> room = Get.arguments;
   final ChatRepository chatRepository;
 
-  ChatRoomController(this.chatRepository);
+  ChatRoomController(this.chatRepository,
+      [this.numberPerLoad = AppConstant.defaultPageSize]);
 
   @override
   void onInit() async {
@@ -88,25 +88,12 @@ class ChatRoomController extends GetxController {
   //       conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser)
   // ].obs;
 
-  getListMessLength() {
-    return room.value.listMessage.length + (isLastPage.value ? 0 : 1);
-  }
-
-  fetchData() async {
+  Future<void> fetchData() async {
     isLoading = true.obs;
     //TODO: fetch next fragment data when user scroll
-    try {
-      await Future.delayed(const Duration(seconds: 5));
-      // final newMess = listMessageMock;
-      final newMess = <Message>[];
-      isLastPage = (newMess.length < AppConstant.defaultPageSize).obs;
-      pageNumber += 1;
-      room.value.listMessage.insertAll(0, newMess);
-    } catch (e) {
-      isError = true.obs;
-    } finally {
-      isLoading = false.obs;
-    }
+    final messages = await chatRepository.getMessages(room.value.id, currentNumberPage, numberPerLoad);
+    room.value.addList(messages);
+    isLoading = false.obs;
   }
 
   Future<void> onSentMessage(BuildContext context) async {

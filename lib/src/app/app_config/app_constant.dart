@@ -8,7 +8,7 @@ abstract class AppConstant {
   //Api
   static const token = 'token';
   static const timeOut = 20000;
-  static const baseUrl = 'http://10.0.0.141:8080';
+  static const baseUrl = 'http://172.16.1.221:8080';
 
   static const login = '/account/login';
   static const getRoomUrl = '/room/get-room';

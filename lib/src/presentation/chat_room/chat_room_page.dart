@@ -123,9 +123,6 @@ class ChatRoomPage extends GetView<ChatRoomController> {
           child: const CircularProgressIndicator(),
         );
       }
-      if (controller.isError.value) {
-        return const Text('error');
-      }
     }
     return Expanded(
         child: Obx(() => ListView.builder(

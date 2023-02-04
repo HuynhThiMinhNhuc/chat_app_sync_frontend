@@ -28,15 +28,15 @@ class HomePage extends GetView<HomePageController> {
           onRefresh: () =>
               Future.sync(() => controller.paggingController.refresh()),
           child: PagedListView<int, Rx<ChatRoom>>(
-            pagingController: controller.paggingController,
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-            builderDelegate: PagedChildBuilderDelegate<Rx<ChatRoom>>(
+              pagingController: controller.paggingController,
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+              builderDelegate: PagedChildBuilderDelegate<Rx<ChatRoom>>(
                 animateTransitions: true,
                 itemBuilder: (context, item, index) => OverviewChatRoom(
-                      chatRoom: item.value,
-                      onTap: () => controller.onTapOverViewChat(item),
-                    )),
-          ),
+                  chatRoom: item.value,
+                  onTap: () => controller.onTapOverViewChat(item),
+                ),
+              )),
         ));
   }
 }

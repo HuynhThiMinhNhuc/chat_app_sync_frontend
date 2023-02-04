@@ -53,17 +53,28 @@ class ChatRoom {
         listMessage: <Message>[].obs,
       );
 
+  addList(List<Message> messages) {
+    for (var message in messages) {
+      addOrReplaceMessage(message);
+    }
+  }
+
   addOrReplaceMessage(Message newMessage) {
-    for (var message in listMessage) {
+    var index = 0;
+    for (int i = 0; i < listMessage.length; i++) {
+      var message = listMessage[i];
       if (message.identify == newMessage.identify) {
-        continue;
-      }
-      if (message.localId != null && message.localId == newMessage.localId) {
-        message = newMessage;
         return;
       }
+      if (message.localId != null && message.localId == newMessage.localId) {
+        listMessage[i] = newMessage;
+        return;
+      }
+      if (newMessage.createdAt.isBefore(message.createdAt)) {
+        index = i + 1;
+      }
     }
-    listMessage.insert(0, newMessage);
+    listMessage.insert(index, newMessage);
   }
 
   RoomChatModel asEntity() => RoomChatModel(
