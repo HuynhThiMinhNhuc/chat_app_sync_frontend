@@ -16,7 +16,7 @@ class ChatRoomPage extends GetView<ChatRoomController> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'Hoang Sang',
+            controller.room.value.name.value,
             style: Theme.of(context).textTheme.bodyText1,
           ),
           flexibleSpace: Container(

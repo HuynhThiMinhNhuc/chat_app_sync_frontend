@@ -64,6 +64,8 @@ class HomePageController extends GetxController {
     chatRepository.receiveMessages(room.listMessage);
   }
 
+  updateLastMessage(Message mess, int roomId) {}
+
   // addNewMessage(int roomId, Message newMess) {
   //   for (int i = 0; i < listChatRoom.length; ++i) {
   //     if (listChatRoom[i]?.id == roomId) {

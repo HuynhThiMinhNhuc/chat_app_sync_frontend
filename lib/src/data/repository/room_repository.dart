@@ -37,9 +37,12 @@ class RoomRepository {
       var setUser = Map.fromIterable(users, key: (user) => user.id);
 
       room.listMessage = List.of(messageDbs.map((message) =>
-          Message.fromEntity(message, setUser[message.createdById]))).obs;
-      room.listJoiner =
-          Map<int, User>.fromIterable(users.map(User.fromEntity), key: (user) => user.id).obs;
+              Message.fromEntity(message, setUser[message.createdById])))
+          .reversed
+          .toList()
+          .obs;
+      room.listJoiner = Map<int, User>.fromIterable(users.map(User.fromEntity),
+          key: (user) => user.id).obs;
 
       rooms.add(room);
     }

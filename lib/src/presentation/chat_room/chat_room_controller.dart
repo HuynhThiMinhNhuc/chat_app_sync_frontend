@@ -97,7 +97,7 @@ class ChatRoomController extends GetxController {
     //TODO: fetch next fragment data when user scroll
     try {
       await Future.delayed(const Duration(seconds: 5));
-      // final newMess = listMessageMock;
+      // final .newMess = listMessageMock;
       final newMess = <Message>[];
       isLastPage = (newMess.length < AppConstant.defaultPageSize).obs;
       pageNumber += 1;
@@ -111,11 +111,11 @@ class ChatRoomController extends GetxController {
 
   Future<void> onSentMessage(BuildContext context) async {
     var currentUser = AppManager().currentUser!;
-    final newessage = Message.withContent(room.value.id,
+    final newMessage = Message.withContent(room.value.id,
         inputTextEditingController.text, User.fromAccount(currentUser));
 
-    await chatRepository.sendMessage(newessage, room.value.id);
-    room.value.listMessage.add(newessage);
+    await chatRepository.sendMessage(newMessage, room.value.id);
+    room.value.listMessage.add(newMessage);
   }
 
   fetchDataWhenScroll() async {
