@@ -1,8 +1,3 @@
-import 'dart:developer';
-
-import 'package:chat_app_sync/src/data/local/local.dart';
-import 'package:chat_app_sync/src/data/local/models/my_account.model.dart';
-import 'package:get/get.dart';
 
 // class Authenticate {
 //   MyAccount? _instance;

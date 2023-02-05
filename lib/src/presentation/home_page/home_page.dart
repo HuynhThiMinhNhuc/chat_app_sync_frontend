@@ -21,6 +21,17 @@ class HomePage extends GetView<HomePageController> {
             'Chat list',
             style: Theme.of(context).textTheme.bodyText1,
           ),
+          actions: [
+            TextButton(
+                onPressed: controller.logout,
+                child: Text(
+                  'Đăng xuất',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      ?.copyWith(color: Theme.of(context).errorColor),
+                ))
+          ],
         ),
         body: RefreshIndicator(
           backgroundColor: Theme.of(context).primaryColor,

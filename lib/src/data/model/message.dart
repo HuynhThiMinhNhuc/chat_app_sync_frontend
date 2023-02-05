@@ -44,6 +44,11 @@ class Message implements Comparable<Message> {
         content: json['content'],
       );
 
+  static List<Message>? getListMessageFromJson(List? json) {
+    if (json == null) return null;
+    return json.map((e) => Message.fromJson(e)).toList();
+  }
+
   bool get isSender => AppManager().currentUser?.id == sender.id;
 
   factory Message.fromEntity(MessageModel message, UserModel user) => Message(
@@ -70,7 +75,9 @@ class Message implements Comparable<Message> {
       return id!.compareTo(other.id!);
     }
     if (id == null && other.id == null) {
-      return localId == null && other.localId == null ? 0 : localId!.compareTo(other.localId!);
+      return localId == null && other.localId == null
+          ? 0
+          : localId!.compareTo(other.localId!);
     }
     return createdAt.compareTo(other.createdAt);
   }

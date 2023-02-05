@@ -64,6 +64,10 @@ class HomePageController extends GetxController {
     chatRepository.receiveMessages(room.listMessage);
   }
 
+  logout() {
+    Get.offAllNamed(AppRoutes.login);
+  }
+
   updateLastMessage(Message mess, int roomId) {}
 
   // addNewMessage(int roomId, Message newMess) {
