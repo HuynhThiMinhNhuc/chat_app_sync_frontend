@@ -14,6 +14,7 @@ abstract class AppConstant {
   static const getRoomUrl = '/room/get-room';
   static const sendMessageUrl = '/message/send-message';
   static const getMessageUrl = '/message/load-room';
+  static const search = '/message/search';
   static const syncDataUrl = '/sync/sync-data';
 
   //storage
