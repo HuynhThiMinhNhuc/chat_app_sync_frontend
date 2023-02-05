@@ -60,11 +60,11 @@ class LocalDatasource {
         await db.execute(createRoom);
         await db.execute(createMessage);
 
-        if (AppConstant.isResetDb) {
-          await db.execute(sampleUsers);
-          await db.execute(sampleRooms);
-          await db.execute(sampleMessages);
-        }
+        // if (AppConstant.isResetDb) {
+        //   await db.execute(sampleUsers);
+        //   await db.execute(sampleRooms);
+        //   await db.execute(sampleMessages);
+        // }
       },
       // onDowngrade: (db, oldVersion, newVersion) => db.execute(dropAllTable),
       version: 1,
@@ -120,6 +120,7 @@ class LocalDatasource {
       ''',
       [pageSize, (page - 1) * pageSize],
     );
+    log('getRooms success');
     return List.of(rooms.map(RoomChatModel.fromJson));
   }
 
@@ -142,22 +143,28 @@ class LocalDatasource {
       ''',
       [roomId, pageSize, (page - 1) * pageSize],
     );
+    log('getMessages success');
     return List.from(messages.map(MessageModel.fromJson));
   }
 
-  Future<void> upsertMessage(List<MessageModel> messages) async {
+  Future<List<int>> upsertMessage(List<MessageModel> messages) async {
+    var rs = <int>[];
     for (var message in messages) {
       try {
         if (message.localId == 0) {
-          await instance.insert('Message', message.toJson());
+          var localId = await instance.insert('Message', message.toJson());
+          rs.add(localId);
         } else {
           await instance.update('Message', message.toJson());
+          rs.add(message.localId);
         }
+        log('upsertMessage success');
       } catch (e) {
         log("upsertMessage fail at ${message.toString()}, error: ${e.toString()}");
         rethrow;
       }
     }
+    return rs;
   }
 
   Future<List<UserModel>> getUsers(List<int> userIds) async {
@@ -169,13 +176,16 @@ class LocalDatasource {
       ''',
       userIds,
     );
+    log('getUsers success');
     return List.from(users.map(UserModel.fromJson));
   }
 
-  Future<void> insertUser(List<UserModel> users) async {
+  Future<void> upsertUser(List<UserModel> users) async {
     for (var user in users) {
-      await instance.insert('User', user.toJson());
+      await instance.insert('User', user.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.ignore);
     }
+    log('upsertUser success');
   }
 
   Future<MyAccount?> getAccountUser() async {
@@ -183,6 +193,7 @@ class LocalDatasource {
     if (users.isEmpty) {
       return null;
     }
+    log('getAccountUser success');
     return MyAccount.fromJson(users[0]);
   }
 
@@ -194,8 +205,10 @@ class LocalDatasource {
           await txn.insert('MyAccount', newInstance.toJson());
         }
       });
+      log('setAccountUser success');
       return true;
     } catch (e) {
+      log('setAccountUser fail, err: ${e.toString()}');
       return false;
     }
   }

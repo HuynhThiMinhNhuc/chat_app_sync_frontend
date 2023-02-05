@@ -6,13 +6,11 @@ class User {
   final int id;
   final String userName;
   final String? imageUri;
-  List<ChatRoom>? listRoom;
 
   User({
     required this.id,
     required this.userName,
     required this.imageUri,
-    this.listRoom,
   });
 
   factory User.fromAccount(MyAccount account) => User(
@@ -22,8 +20,8 @@ class User {
       );
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json['id'] ?? 0,
-        userName: json['name'] ?? '',
+        id: json['id'],
+        userName: json['name'],
         imageUri: json['imageUri'],
       );
 
@@ -32,4 +30,18 @@ class User {
         userName: user.name,
         imageUri: user.imageUri,
       );
+
+  UserModel asEntity() => UserModel(
+        id: id,
+        name: userName,
+        imageUri: imageUri,
+      );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userName': userName,
+      'imageUri': imageUri,
+    };
+  }
 }

@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class OverviewChatRoom extends StatelessWidget {
-  final ChatRoom chatRoom;
+  final Rx<ChatRoom> chatRoom;
   final void Function()? onTap;
   const OverviewChatRoom({Key? key, required this.chatRoom, this.onTap})
       : super(key: key);

@@ -1,5 +1,6 @@
 import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/data/local/models/my_account.model.dart';
+import 'package:chat_app_sync/src/data/local/models/user.model.dart';
 
 import '../model/user.dart';
 import '../network/network.dart';
@@ -30,5 +31,9 @@ class UserRepository {
       );
     }
     throw Exception(response.message);
+  }
+
+  Future<void> upsertUsers(List<User> users) {
+    return _localDatasource.upsertUser(users.map((u) => u.asEntity()).toList());
   }
 }

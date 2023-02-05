@@ -6,15 +6,15 @@ class ApiInterceptor extends InterceptorsWrapper {
   ApiInterceptor();
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    setHeaderRequest(options);
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    await setHeaderRequest(options);
     super.onRequest(options, handler);
   }
 
-  void setHeaderRequest(RequestOptions options) {
+  Future<void> setHeaderRequest(RequestOptions options) async {
     final appManager = AppManager();
     if (appManager.isSignIn()) {
-      options.headers[AppConstant.token] = appManager.getUserToken();
+      options.headers[AppConstant.token] = await appManager.getUserToken();
     }
   }
 }

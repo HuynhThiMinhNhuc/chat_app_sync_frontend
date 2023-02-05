@@ -6,14 +6,14 @@ import 'package:chat_app_sync/src/data/model/user.dart';
 
 class Message implements Comparable<Message> {
   int? id;
-  int? localId;
+  int localId;
   int roomId;
   User sender;
   String content;
   MessageStatus? messageStatus;
   DateTime createdAt;
 
-  String get identify => '${id ?? '_id_'}_${{localId ?? '_localId_'}}';
+  String get identify => '${id ?? '_id_'}_${{localId}}';
 
   Message({
     required this.id,
@@ -28,25 +28,36 @@ class Message implements Comparable<Message> {
   factory Message.withContent(int roomId, String content, User sender) =>
       Message(
         id: null,
-        localId: null,
+        localId: 0,
         content: content,
         createdAt: DateTime.now(),
         roomId: roomId,
         sender: sender,
       );
 
-  factory Message.fromJson(Map<String, dynamic> json) => Message(
+  factory Message.fromJson(Map<String, dynamic> json, [int? roomId]) => Message(
         id: json['id'],
-        localId: json['localId'],
-        roomId: json['roomId'],
+        localId: json['localId'] ?? 0,
+        roomId: json['roomId'] ?? roomId!,
         createdAt: DateTime.parse(json['createdAt'].toString()),
-        sender: User.fromJson(json['sender']),
+        sender: User.fromJson(json['createdBy']),
         content: json['content'],
       );
 
   static List<Message>? getListMessageFromJson(List? json) {
     if (json == null) return null;
     return json.map((e) => Message.fromJson(e)).toList();
+}
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'localId': localId,
+      'content': content,
+      'createdAt': createdAt.toIso8601String(),
+      'createdBy': sender.toJson(),
+      'roomId': roomId,
+    };
   }
 
   bool get isSender => AppManager().currentUser?.id == sender.id;
@@ -62,7 +73,7 @@ class Message implements Comparable<Message> {
 
   MessageModel asEntity() => MessageModel(
         id: id,
-        localId: localId ?? 0,
+        localId: localId,
         createdAt: createdAt,
         content: content,
         createdById: sender.id,
@@ -73,11 +84,6 @@ class Message implements Comparable<Message> {
   int compareTo(Message other) {
     if (id != null && other.id != null) {
       return id!.compareTo(other.id!);
-    }
-    if (id == null && other.id == null) {
-      return localId == null && other.localId == null
-          ? 0
-          : localId!.compareTo(other.localId!);
     }
     return createdAt.compareTo(other.createdAt);
   }

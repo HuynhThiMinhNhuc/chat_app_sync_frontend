@@ -16,10 +16,10 @@ class ChatRoomPage extends GetView<ChatRoomController> {
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           centerTitle: true,
-          title: Text(
-            controller.room.value.name.value,
+          title: Obx(() => Text(
+            controller.room.value.name,
             style: Theme.of(context).textTheme.bodyText1,
-          ),
+          )) ,
           flexibleSpace: Container(
               decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [

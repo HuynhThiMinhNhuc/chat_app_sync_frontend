@@ -28,11 +28,18 @@ class ChatRepository {
   }
 
   Future<void> sendMessage(Message message) async {
-    return _localDatasource.upsertMessage([message.asEntity()]);
+    var listLocalId =
+        await _localDatasource.upsertMessage([message.asEntity()]);
+    message.localId = listLocalId.first;
+    return;
   }
 
-  Future<void> receiveMessages(List<Message> listMessage) {
-    return _localDatasource.upsertMessage(
+  Future<void> receiveMessages(List<Message> listMessage) async {
+    var listLocalId = await _localDatasource.upsertMessage(
         List.of(listMessage.map((message) => message.asEntity())));
+    for (var i = 0; i < listMessage.length; i++) {
+      listMessage[i].localId = listLocalId[i];
+    }
+    return;
   }
 }
