@@ -13,6 +13,7 @@ INSERT INTO "RoomChat"("id", "name", "avatarUri") VALUES
 
 const sampleMessages = """
 INSERT INTO "Message"("id", "localId", "content", "createdById", "roomId") VALUES
-(1, 1, 'Xin chào, cho mình làm quen nha', 1, 1),
-(2, 2, 'Chào bạn, mình tên Nhực', 3, 1);
+(1, 1, 'Chat 1', 2, 1),
+(2, 2, 'Chat 2', 3, 1),
+(3, 3, 'Chat 3', 2, 1);
 """;

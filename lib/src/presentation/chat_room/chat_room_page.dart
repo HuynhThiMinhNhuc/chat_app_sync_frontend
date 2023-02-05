@@ -128,6 +128,7 @@ class ChatRoomPage extends GetView<ChatRoomController> {
         child: Obx(() => ListView.builder(
             controller: controller.scrollController,
             itemCount: controller.room.value.listMessage.length,
+            reverse: true,
             itemBuilder: (context, index) {
               return MessageWidget(
                   message: controller.room.value.listMessage[index]);

@@ -61,6 +61,10 @@ class ChatRoom {
 
   addOrReplaceMessage(Message newMessage) {
     var index = 0;
+    if (newMessage.id == null && newMessage.localId == null) {
+      listMessage.insert(index, newMessage);
+      return;
+    }
     for (int i = 0; i < listMessage.length; i++) {
       var message = listMessage[i];
       if (message.identify == newMessage.identify) {

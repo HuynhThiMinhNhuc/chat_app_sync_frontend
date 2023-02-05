@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/data/local/const.dart';
 import 'package:chat_app_sync/src/data/local/models/user.model.dart';
 import 'package:chat_app_sync/src/data/local/samples/sample.dart';
@@ -29,7 +30,9 @@ class LocalDatasource {
     var path = join(databasesPath, "chat_app.db");
 
     // delete existing if any
-    // await deleteDatabase(path);
+    if (AppConstant.isResetDb) {
+      await deleteDatabase(path);
+    }
 
     // Check if the database exists
     var exists = await databaseExists(path);
@@ -57,9 +60,11 @@ class LocalDatasource {
         await db.execute(createRoom);
         await db.execute(createMessage);
 
-        // await db.execute(sampleUsers);
-        // await db.execute(sampleRooms);
-        // await db.execute(sampleMessages);
+        if (AppConstant.isResetDb) {
+          await db.execute(sampleUsers);
+          await db.execute(sampleRooms);
+          await db.execute(sampleMessages);
+        }
       },
       // onDowngrade: (db, oldVersion, newVersion) => db.execute(dropAllTable),
       version: 1,
@@ -131,7 +136,7 @@ class LocalDatasource {
       SELECT *
       FROM "Message"
       WHERE "roomId" = ?
-      ORDER BY "localId" DESC
+      ORDER BY "createdAt" DESC
       LIMIT ?
       OFFSET ?
       ''',

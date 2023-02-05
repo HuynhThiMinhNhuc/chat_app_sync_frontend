@@ -8,7 +8,7 @@ abstract class AppConstant {
   //Api
   static const token = 'token';
   static const timeOut = 20000;
-  static const baseUrl = 'http://172.16.1.221:8080';
+  static const baseUrl = 'http://192.168.1.8:8080';
 
   static const login = '/account/login';
   static const getRoomUrl = '/room/get-room';
@@ -24,4 +24,6 @@ abstract class AppConstant {
   static const sendMessageTask = "SEND_MESSAGE_TASK";
   static const getRoomTask = "GET_ROOM_TASK";
   static const syncMessageTask = "SYNC_MESSAGE_TASK";
+
+  static const isResetDb = false;
 }
