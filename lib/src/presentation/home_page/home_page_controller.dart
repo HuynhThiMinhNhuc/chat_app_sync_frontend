@@ -80,6 +80,13 @@ class HomePageController extends GetxController {
     chatRepository.receiveMessages(room.listMessage);
   }
 
+  Future<void> logout() async {
+    AppManager().cleanData();
+    Get.offAllNamed(AppRoutes.login);
+    return;
+  }
+
+  updateLastMessage(Message mess, int roomId) {}
   Future<void> getRemoteRooms(int page, int pageSize) async {
     var res = await Get.find<NetworkDatasource>().getRooms(page, pageSize);
     if (res.isSuccess) {

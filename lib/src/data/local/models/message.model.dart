@@ -35,15 +35,15 @@ class MessageModel {
   }
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
-        localId: json['localId'],
-        createdAt: DateTime.parse(json['createdAt'].toString()) ,
+        localId: json['localId'] ?? 0,
+        createdAt: DateTime.parse(json['createdAt'].toString()),
         content: json['content'],
         createdById: json['createdById'],
         roomId: json['roomId'],
         id: json['id'],
       );
 
-      @override
+  @override
   String toString() {
     return jsonEncode(toJson());
   }

@@ -216,7 +216,7 @@ class LocalDatasource {
     try {
       instance.transaction((txn) async {
         await txn.delete('Message');
-        await txn.delete('Room');
+        await txn.delete('RoomChat');
         await txn.delete('User');
       });
       log('cleanData success');

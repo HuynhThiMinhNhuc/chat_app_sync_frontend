@@ -65,10 +65,4 @@ class LoginController extends GetxController {
       }
     }
   }
-
-  Future<void> onLogout() async {
-    AppManager().cleanData();
-    Get.toNamed(AppRoutes.login);
-    return;
-  }
 }

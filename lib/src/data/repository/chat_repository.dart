@@ -21,6 +21,7 @@ class ChatRepository {
     var users = await _localDatasource.getUsers(userIds);
     var setUsers =
         Map.fromIterable(users.map(User.fromEntity), key: (user) => user.id);
+    // TODO: call network
 
     return List.of(messageDbs.map((message) =>
         Message.fromEntity(message, setUsers[message.createdById])));

@@ -44,6 +44,11 @@ class Message implements Comparable<Message> {
         content: json['content'],
       );
 
+  static List<Message>? getListMessageFromJson(List? json) {
+    if (json == null) return null;
+    return json.map((e) => Message.fromJson(e)).toList();
+}
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

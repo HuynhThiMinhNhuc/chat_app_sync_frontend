@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:chat_app_sync/src/common/base/storaged_service.dart';
 import 'package:chat_app_sync/src/data/local/local.dart';
 import 'package:chat_app_sync/src/data/local/models/my_account.model.dart';
-import 'package:chat_app_sync/src/data/network/network.dart';
 import 'package:chat_app_sync/src/data/repository/user_repository.dart';
 import 'package:get/get.dart';
 
