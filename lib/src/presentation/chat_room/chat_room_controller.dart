@@ -27,72 +27,22 @@ class ChatRoomController extends GetxController {
 
   @override
   void onInit() async {
-    scrollController.addListener(() async => await fetchDataWhenScroll());
     super.onInit();
+    scrollController.addListener(fetchDataWhenScroll);
   }
-//  @override
-//   void onReady()async {
-//      scrollController.addListener(() async => await fetchDataWhenScroll());
-//     super.onReady();
-//   }
 
-  //TODO: get data from server
-  // final listMessage = [
-  //   Message(
-  //       conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'hello',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'How are you?',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'hello',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'How are you?',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'hi dddkjhdkjkjdhksssssssssssssssssssssssssj',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'hello',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'How are you?',
-  //       messageStatus: MessageStatus.viewed,
-  //        sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'fine', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser),
-  //   Message(
-  //       conttent: 'bye', messageStatus: MessageStatus.viewed,  sender: AppManager().currentUser)
-  // ].obs;
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   Future<void> fetchData() async {
     isLoading = true.obs;
     //TODO: fetch next fragment data when user scroll
     final messages = await chatRepository.getMessages(room.value.id, currentNumberPage, numberPerLoad);
     room.value.addList(messages);
+    update();
     isLoading = false.obs;
   }
 
@@ -102,7 +52,8 @@ class ChatRoomController extends GetxController {
         inputTextEditingController.text, User.fromAccount(currentUser));
 
     await chatRepository.sendMessage(newMessage);
-    room.value.addOrReplaceMessage(newMessage);
+    room.value.addList([newMessage]);
+    update();
   }
 
   fetchDataWhenScroll() async {

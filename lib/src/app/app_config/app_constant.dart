@@ -8,15 +8,17 @@ abstract class AppConstant {
   //Api
   static const token = 'token';
   static const timeOut = 20000;
-  static const baseUrl = 'http://192.168.1.8:8080';
+  static const baseUrl = 'http://192.168.2.8:8080';
 
   static const login = '/account/login';
   static const getRoomUrl = '/room/get-room';
   static const sendMessageUrl = '/message/send-message';
   static const getMessageUrl = '/message/load-room';
+  static const syncDataUrl = '/sync/sync-data';
 
   //storage
   static const apiKey = 'meton_api_token';
+  static const lastSyncTime = 'meton_api_last_sync_time';
 
   //Infinite list
   static const defaultPageSize = 5;

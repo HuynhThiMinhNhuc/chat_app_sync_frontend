@@ -26,9 +26,9 @@ class AppManager {
     }
   }
 
-  Future<String?> getUserToken() async {
-    final token = await _storageService.apiToken;
-    if (token == null) return null;
-    return token;
-  }
+  Future<void> setLastSyncTime(DateTime? lastSyncTime) =>
+      _storageService.setLastSyncTime(lastSyncTime);
+
+  Future<String?> getUserToken() => _storageService.apiToken;
+  Future<DateTime?> getLastSyncTime() => _storageService.lastSyncTime;
 }

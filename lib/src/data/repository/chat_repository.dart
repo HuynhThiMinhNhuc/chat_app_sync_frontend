@@ -6,7 +6,7 @@ import 'package:chat_app_sync/src/data/model/user.dart';
 import 'package:chat_app_sync/src/data/network/network.dart';
 
 class ChatRepository {
-    final NetworkDatasource _networkDatasource;
+  final NetworkDatasource _networkDatasource;
   final LocalDatasource _localDatasource;
 
   ChatRepository({
@@ -19,17 +19,26 @@ class ChatRepository {
     var messageDbs = await _localDatasource.getMessages(roomId, page, pageSize);
     var userIds = List.of(messageDbs.map((message) => message.createdById));
     var users = await _localDatasource.getUsers(userIds);
-    var setUsers = Map.fromIterable(users.map(User.fromEntity), key: (user) => user.id);
-    // TODO: call network
+    var setUsers =
+        Map.fromIterable(users.map(User.fromEntity), key: (user) => user.id);
 
-    return List.of(messageDbs.map((message) => Message.fromEntity(message, setUsers[message.createdById])));
+    return List.of(messageDbs.map((message) =>
+        Message.fromEntity(message, setUsers[message.createdById])));
   }
 
   Future<void> sendMessage(Message message) async {
-    return _localDatasource.upsertMessage([message.asEntity()]);
+    var listLocalId =
+        await _localDatasource.upsertMessage([message.asEntity()]);
+    message.localId = listLocalId.first;
+    return;
   }
 
-  Future<void> receiveMessages(List<Message> listMessage) {
-    return _localDatasource.upsertMessage(List.of(listMessage.map((message) => message.asEntity())));
+  Future<void> receiveMessages(List<Message> listMessage) async {
+    var listLocalId = await _localDatasource.upsertMessage(
+        List.of(listMessage.map((message) => message.asEntity())));
+    for (var i = 0; i < listMessage.length; i++) {
+      listMessage[i].localId = listLocalId[i];
+    }
+    return;
   }
 }

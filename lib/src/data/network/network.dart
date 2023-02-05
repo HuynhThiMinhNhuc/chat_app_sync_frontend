@@ -21,21 +21,27 @@ class NetworkDatasource {
     }
   }
 
-  Future<ResponseData<ChatRoom>> getRooms(int roomId) async {
+  Future<ResponseData<List<ChatRoom>>> getRooms(int page, pageSize,
+      [int? roomId]) async {
     try {
-      final res = await _apiProvider
-          .get(AppConstant.getRoomUrl, params: {'roomId': roomId});
-      return ResponseData.success(ChatRoom.fromJson(res['data']),
-          response: res);
+      final params = {'page': page, 'pageSize': pageSize};
+      if (roomId != null) {
+        params.addAll({'roomId': roomId});
+      }
+      final res =
+          await _apiProvider.get(AppConstant.getRoomUrl, params: params);
+      final roomRes = res['data']['items'] as List<dynamic>;
+      final rooms = roomRes.map((json) => ChatRoom.fromJson(json as Map<String, dynamic>)).toList();
+      return ResponseData.success(rooms, response: res);
     } catch (e) {
       return ResponseData.failed(e);
     }
   }
 
-  Future<ResponseData<Message>> sendMessage(Map<String, dynamic> params) async {
+  Future<ResponseData<Message>> sendMessage(Message message) async {
     try {
       final res =
-          await _apiProvider.post(AppConstant.sendMessageUrl, data: params);
+          await _apiProvider.post(AppConstant.sendMessageUrl, data: message.toJson());
       return ResponseData.success(Message.fromJson(res['data']), response: res);
     } catch (e) {
       return ResponseData.failed(e);
@@ -43,10 +49,10 @@ class NetworkDatasource {
   }
 
   Future<ResponseData<Map<String, dynamic>>> syncData(
-      Map<String, dynamic> params) async {
+      DateTime? lastTimeSync) async {
     try {
       final res =
-          await _apiProvider.get(AppConstant.getMessageUrl, params: params);
+          await _apiProvider.get(AppConstant.syncDataUrl, params: {'lastSyncData': lastTimeSync?.toIso8601String()});
       return ResponseData.success(res['data'], response: res);
     } catch (e) {
       return ResponseData.failed(e);

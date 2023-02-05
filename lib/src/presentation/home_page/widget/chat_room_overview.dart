@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class OverviewChatRoom extends StatelessWidget {
-  final ChatRoom chatRoom;
+  final Rx<ChatRoom> chatRoom;
   final void Function()? onTap;
   const OverviewChatRoom({Key? key, required this.chatRoom, this.onTap})
       : super(key: key);
@@ -21,31 +21,32 @@ class OverviewChatRoom extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(chatRoom.avatarUri.value ??
-                        'https://as1.ftcdn.net/v2/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg'),
-                    radius: 25.r,
-                  ),
+                  Obx(() => CircleAvatar(
+                        backgroundImage: NetworkImage(chatRoom
+                                .value.avatarUri ??
+                            'https://as1.ftcdn.net/v2/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg'),
+                        radius: 25.r,
+                      )),
                   SizedBox(
                     width: 12.w,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        chatRoom.name.value,
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      Obx(() => Text(
-                            chatRoom.lastMessage?.content ??
+                  Obx(() => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            chatRoom.value.name,
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          SizedBox(
+                            height: 4.h,
+                          ),
+                          Text(
+                            chatRoom.value.lastMessage?.content ??
                                 'Chưa có tin nhắn nào',
                             style: Theme.of(context).textTheme.bodyText2,
-                          )),
-                    ],
-                  )
+                          ),
+                        ],
+                      ))
                 ],
               ),
               Stack(children: [

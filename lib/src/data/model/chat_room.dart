@@ -1,17 +1,24 @@
+import 'dart:math';
+
 import 'package:chat_app_sync/src/data/local/models/room.model.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/model/user.dart';
 import 'package:get/get.dart';
 
-class ChatRoom {
+class ChatRoom extends GetxController implements Comparable<ChatRoom> {
   final int id;
-  final Rx<String> name;
-  final Rx<String?> avatarUri;
+  final String name;
+  final String? avatarUri;
   final DateTime createdAt;
   final DateTime updatedAt;
-  RxList<Message> listMessage;
-  RxMap<int, User> listJoiner;
+  List<Message> listMessage;
+  Map<int, User> listJoiner;
   Message? get lastMessage => listMessage.isEmpty ? null : listMessage[0];
+  DateTime get maxTime => lastMessage == null
+      ? updatedAt
+      : lastMessage!.createdAt.isAfter(updatedAt)
+          ? updatedAt
+          : lastMessage!.createdAt;
 
   ChatRoom({
     required this.id,
@@ -25,44 +32,48 @@ class ChatRoom {
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) => ChatRoom(
         id: json['id'],
-        name: json['name'],
-        createdAt: json['createdAt'] is String
-            ? DateTime.parse(json['createdAt'].toString())
-            : DateTime.now(),
-        updatedAt: json['updatedAt'] is String
-            ? DateTime.parse(json['updatedAt'].toString())
-            : DateTime.now(),
-        avatarUri: json['avatarUri'],
-        listMessage: List.of((json['messages'] as List<Map<String, dynamic>>)
-                .map(Message.fromJson))
+        name: (json['name'] as String),
+        createdAt: DateTime.parse(json['createdAt'].toString()),
+        updatedAt: DateTime.parse(json['updatedAt'].toString()),
+        avatarUri: (json['avatarUri'] as String?),
+        listMessage: List.of((json['messages'] as List<dynamic>).map(
+                (j) => Message.fromJson(j as Map<String, dynamic>, json['id'])))
             .obs,
         listJoiner: {
-          for (var element in (json['joiners'] as List<Map<String, dynamic>>)
-              .map(User.fromJson))
+          for (var element in (json['joiners'] as List<dynamic>)
+              .map((j) => User.fromJson(j as Map<String, dynamic>)))
             element.id: element
         }.obs,
       );
 
   factory ChatRoom.fromEntity(RoomChatModel room) => ChatRoom(
         id: room.id,
-        avatarUri: room.avatarUri.obs,
-        name: room.name.obs,
+        avatarUri: room.avatarUri,
+        name: room.name,
         createdAt: room.createdAt,
         updatedAt: room.updatedAt,
         listJoiner: <int, User>{}.obs,
         listMessage: <Message>[].obs,
       );
 
-  addList(List<Message> messages) {
+  void addList(List<Message> messages) {
     for (var message in messages) {
-      addOrReplaceMessage(message);
+      _addOrReplaceMessage(message);
+    }
+    reversedList(listMessage..sort());
+  }
+
+  void reversedList<T>(List<T> originalList) {
+    for (int i = 0; i < originalList.length ~/ 2; i++) {
+      T temp = originalList[i];
+      originalList[i] = originalList[originalList.length - i - 1];
+      originalList[originalList.length - i - 1] = temp;
     }
   }
 
-  addOrReplaceMessage(Message newMessage) {
-    var index = 0;
-    if (newMessage.id == null && newMessage.localId == null) {
-      listMessage.insert(index, newMessage);
+  _addOrReplaceMessage(Message newMessage) {
+    if (newMessage.id == null && newMessage.localId == 0) {
+      listMessage.insert(0, newMessage);
       return;
     }
     for (int i = 0; i < listMessage.length; i++) {
@@ -70,21 +81,26 @@ class ChatRoom {
       if (message.identify == newMessage.identify) {
         return;
       }
-      if (message.localId != null && message.localId == newMessage.localId) {
+      if (message.localId != 0 && message.localId == newMessage.localId) {
         listMessage[i] = newMessage;
         return;
       }
-      if (newMessage.createdAt.isBefore(message.createdAt)) {
-        index = i + 1;
+      if (message.id != null && message.id == newMessage.id) {
+        return;
       }
     }
-    listMessage.insert(index, newMessage);
+    listMessage.add(newMessage);
   }
 
   RoomChatModel asEntity() => RoomChatModel(
         id: id,
         createdAt: createdAt,
         updatedAt: updatedAt,
-        name: name.value,
+        name: name,
       );
+
+  @override
+  int compareTo(ChatRoom other) {
+    return maxTime.compareTo(other.maxTime);
+  }
 }
