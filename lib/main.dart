@@ -1,7 +1,9 @@
 import 'package:chat_app_sync/src/app/app_binding.dart';
 import 'package:chat_app_sync/src/app/app_config/app_theme.dart';
+import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_pages.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
+import 'package:chat_app_sync/src/data/local/local.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,13 +12,17 @@ import 'package:get/get.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // AppBinding().dependencies();
   await ScreenUtil.ensureScreenSize();
+
+  final localDatasource = LocalDatasource();
+  await Get.putAsync(() async {
+    await localDatasource.ensureInitialized();
+    return localDatasource;
+  });
   runApp(const ChatAppSync());
 }
 
 class ChatAppSync extends StatelessWidget {
-
   const ChatAppSync({super.key});
 
   @override

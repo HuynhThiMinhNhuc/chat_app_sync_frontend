@@ -1,7 +1,11 @@
-import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
+import 'dart:developer';
+
 import 'package:chat_app_sync/src/common/base/storaged_service.dart';
+import 'package:chat_app_sync/src/data/local/local.dart';
 import 'package:chat_app_sync/src/data/local/models/my_account.model.dart';
-import 'package:chat_app_sync/src/data/model/user.dart';
+import 'package:chat_app_sync/src/data/network/network.dart';
+import 'package:chat_app_sync/src/data/repository/user_repository.dart';
+import 'package:get/get.dart';
 
 class AppManager {
   static final AppManager _singleton = AppManager._internal();
@@ -16,6 +20,31 @@ class AppManager {
 
   isSignIn() => currentUser != null;
 
+  Future<void> setup() async {
+    _currentUser = await Get.find<LocalDatasource>().getAccountUser();
+  }
+
+  Future<bool> tryLogIn() async {
+    if (_currentUser == null) {
+      return false;
+    }
+    var userRepo = Get.find<UserRepository>();
+    try {
+      var account =
+          await userRepo.login(_currentUser!.userName, _currentUser!.password);
+      saveKeyAndCurrentInfor(account, account.token);
+    } catch (e) {
+      log("Cannot tryLogin, err = ${e.toString()}");
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> cleanData() async {
+    await saveKeyAndCurrentInfor(null, null);
+    await Get.find<LocalDatasource>().cleanData();
+  }
+
   Future<void> saveKeyAndCurrentInfor(MyAccount? user, String? token) async {
     _currentUser = user;
     await _storageService.setApiToken(token);
@@ -23,6 +52,11 @@ class AppManager {
       authHeader.remove('token');
     } else {
       authHeader.addAll({'token': token});
+    }
+    try {
+      await Get.find<LocalDatasource>().setAccountUser(user);
+    } catch (e) {
+      log("Save account fail ${e.toString()}");
     }
   }
 

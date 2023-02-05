@@ -21,6 +21,19 @@ class LoginController extends GetxController {
     super.dispose();
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+    AppManager().setup().then((_) async {
+      if (AppManager().isSignIn()) {
+        var success = await AppManager().tryLogIn();
+        if (success) {
+          await Get.toNamed(AppRoutes.homePage);
+        }
+      }
+    });
+  }
+
   //Validation
   String? onValidationUserName(String? value) {
     if (value == null || value.isEmpty) {
@@ -36,11 +49,10 @@ class LoginController extends GetxController {
     return null;
   }
 
-  onLogin() async {
+  Future<void> onLogin() async {
     if (formKey.currentState == null) {
       AlertDialogWidget.show();
     } else if (formKey.currentState!.validate()) {
-      //TODO: resove logic and navigate to homepage
       try {
         final loginRes = await userRepository.login(
             userNameTextEditingController.text,
@@ -52,5 +64,11 @@ class LoginController extends GetxController {
         AlertDialogWidget.show(content: e.toString());
       }
     }
+  }
+
+  Future<void> onLogout() async {
+    AppManager().cleanData();
+    Get.toNamed(AppRoutes.login);
+    return;
   }
 }

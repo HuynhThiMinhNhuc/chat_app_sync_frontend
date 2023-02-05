@@ -197,7 +197,7 @@ class LocalDatasource {
     return MyAccount.fromJson(users[0]);
   }
 
-  Future<bool> setAccountUser(MyAccount? newInstance) async {
+  Future<void> setAccountUser(MyAccount? newInstance) async {
     try {
       instance.transaction((txn) async {
         await txn.delete('MyAccount');
@@ -206,10 +206,23 @@ class LocalDatasource {
         }
       });
       log('setAccountUser success');
-      return true;
     } catch (e) {
       log('setAccountUser fail, err: ${e.toString()}');
-      return false;
+      rethrow;
+    }
+  }
+
+  Future<void> cleanData() async {
+    try {
+      instance.transaction((txn) async {
+        await txn.delete('Message');
+        await txn.delete('Room');
+        await txn.delete('User');
+      });
+      log('cleanData success');
+    } catch (e) {
+      log('cleanData fail, err: ${e.toString()}');
+      rethrow;
     }
   }
 }
