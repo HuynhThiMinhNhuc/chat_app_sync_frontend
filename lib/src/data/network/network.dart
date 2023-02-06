@@ -68,7 +68,7 @@ class NetworkDatasource {
         'limit': 20,
         'offset': 0
       };
-      final res = await _apiProvider.post(AppConstant.search, params: params);
+      final res = await _apiProvider.get(AppConstant.search, params: params);
       final listMessage = Message.getListMessageFromJson(res['data'] as List);
       return ResponseData.success(listMessage, response: res);
     } catch (e) {

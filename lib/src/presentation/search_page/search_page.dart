@@ -1,9 +1,9 @@
+import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/common/widget/internet_image_widget.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/presentation/search_page/search_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class SearchPage extends GetView<SearchPageController> {
@@ -58,25 +58,27 @@ class SearchResultWidget extends StatelessWidget {
       onTap: () => {},
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  InternetImageWidget(
-                    imgUrl: message.sender.imageUri,
-                    width: 52.r,
-                    height: 52.r,
-                    borderRadius: 100.r,
-                  ),
-                  SizedBox(
-                    width: 12.w,
-                  ),
-                  Column(
+          SizedBox(
+            width: AppConstant.width,
+            child: Row(
+              children: [
+                InternetImageWidget(
+                  imgUrl: message.sender.imageUri,
+                  width: 52.r,
+                  height: 52.r,
+                  borderRadius: 100.r,
+                ),
+                SizedBox(
+                  width: 12.w,
+                ),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         message.sender.userName,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       SizedBox(
@@ -84,31 +86,22 @@ class SearchResultWidget extends StatelessWidget {
                       ),
                       Text(
                         message.content,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ],
-                  )
-                ],
-              ),
-              Stack(children: [
-                Icon(
-                  FontAwesomeIcons.solidMoon,
-                  color: Theme.of(context).errorColor,
-                  size: 45.r,
-                ),
-                Icon(
-                  FontAwesomeIcons.solidCommentDots,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  size: 30.r,
-                ),
-              ])
-            ],
+                  ),
+                )
+              ],
+            ),
           ),
           SizedBox(
             height: 4.h,
           ),
           Divider(
             color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.2),
+            thickness: 0.3,
           ),
           SizedBox(
             height: 8.h,

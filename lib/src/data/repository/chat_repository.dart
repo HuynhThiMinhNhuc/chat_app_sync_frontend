@@ -1,3 +1,4 @@
+import 'package:chat_app_sync/src/common/network/api_response.dart';
 import 'package:chat_app_sync/src/data/local/local.dart';
 import 'package:chat_app_sync/src/data/local/models/message.model.dart';
 import 'package:chat_app_sync/src/data/model/chat_room.dart';
@@ -41,5 +42,9 @@ class ChatRepository {
       listMessage[i].localId = listLocalId[i];
     }
     return;
+  }
+
+  Future<ResponseData<dynamic>> search(String content, int roomId) async {
+    return await _networkDatasource.search(content, roomId);
   }
 }
