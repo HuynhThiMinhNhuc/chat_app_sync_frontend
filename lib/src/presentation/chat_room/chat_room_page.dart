@@ -61,7 +61,7 @@ class ChatRoomPage extends GetView<ChatRoomController> {
                                   Obx(() => TextButton(
                                       onPressed:
                                           controller.searchKey.value.isNotEmpty
-                                              ? controller.onNavigateSearchPage
+                                              ? controller.search
                                               : null,
                                       child: Text(
                                         'Search',

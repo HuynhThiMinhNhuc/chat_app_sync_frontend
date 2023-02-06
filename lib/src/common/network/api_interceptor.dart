@@ -6,7 +6,8 @@ class ApiInterceptor extends InterceptorsWrapper {
   ApiInterceptor();
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     await setHeaderRequest(options);
     super.onRequest(options, handler);
   }

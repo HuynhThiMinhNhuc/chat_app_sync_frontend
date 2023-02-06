@@ -1,6 +1,7 @@
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
+import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
 import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/model/user.dart';
@@ -40,7 +41,8 @@ class ChatRoomController extends GetxController {
   Future<void> fetchData() async {
     isLoading = true.obs;
     //TODO: fetch next fragment data when user scroll
-    final messages = await chatRepository.getMessages(room.value.id, currentNumberPage, numberPerLoad);
+    final messages = await chatRepository.getMessages(
+        room.value.id, currentNumberPage, numberPerLoad);
     room.value.addList(messages);
     update();
     isLoading = false.obs;
@@ -70,6 +72,16 @@ class ChatRoomController extends GetxController {
   onChangeKeySearch(String? value) {
     if (value != null) {
       searchKey.value = value;
+    }
+  }
+
+  search() async {
+    final searchResult = await chatRepository.search(
+        searchTextEditingController.text, room.value.id);
+    if (searchResult.isSuccess) {
+      Get.toNamed(AppRoutes.searchPage, arguments: searchResult.data);
+    } else {
+      AlertDialogWidget.show(content: searchResult.message);
     }
   }
 }
