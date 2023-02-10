@@ -47,7 +47,7 @@ extension StorageServiceExt on StorageService {
 
   Future<DateTime?> get lastSyncTime async {
     final t = await _secureStorage.read(key: AppConstant.lastSyncTime);
-    return DateTime.parse(t.toString());
+    return t == null ? null : DateTime.parse(t.toString());
   }
 
   Future<void> setLastSyncTime(DateTime? apiToken) => _secureStorage.write(

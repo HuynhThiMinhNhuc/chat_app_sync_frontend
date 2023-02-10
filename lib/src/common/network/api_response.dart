@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
@@ -57,8 +58,8 @@ class ResponseData<T> {
     message = message?.isEmpty == true ? status?.message : message;
   }
   ResponseData.failed(dynamic error) {
+    status = _mapErrorToState(error);
     if (error is DioError || error is DioErrorType) {
-      status = _mapErrorToState(error);
       try {
         final json = jsonDecode(error?.response.toString() ?? '');
         if (json == null) {
@@ -70,8 +71,11 @@ class ResponseData<T> {
               : message;
         }
       } catch (e) {
+        log(e.toString());
         message = status?.message;
       }
+    } else {
+      message = error.toString();
     }
   }
   Status _mapCodeToState(int statusCode) {

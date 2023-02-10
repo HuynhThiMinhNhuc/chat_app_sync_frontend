@@ -40,13 +40,13 @@ class Message implements Comparable<Message> {
         localId: json['localId'] ?? 0,
         roomId: json['roomId'] ?? roomId!,
         createdAt: DateTime.parse(json['createdAt'].toString()),
-        sender: User.fromJson(json['createdBy']),
+        sender: User.fromJson(json['createdBy'] as Map<String, dynamic>),
         content: json['content'],
       );
 
-  static List<Message>? getListMessageFromJson(List? json) {
-    if (json == null) return null;
-    return json.map((e) => Message.fromJson(e)).toList();
+  static List<Message>? getListMessageFromJson(Map<String,dynamic> json, int roomId) {
+    final list = json['items'] as List<dynamic>;
+    return list.map((e) => Message.fromJson(e as Map<String, dynamic>, roomId)).toList();
 }
 
   Map<String, dynamic> toJson() {
@@ -83,7 +83,7 @@ class Message implements Comparable<Message> {
   @override
   int compareTo(Message other) {
     if (id != null && other.id != null) {
-      return id!.compareTo(other.id!);
+      return id!.compareTo(other.id!) * -1;
     }
     return createdAt.compareTo(other.createdAt);
   }

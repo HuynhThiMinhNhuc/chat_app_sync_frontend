@@ -1,3 +1,4 @@
+import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
 import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
@@ -25,6 +26,9 @@ class LoginController extends GetxController {
   void onReady() {
     super.onReady();
     AppManager().setup().then((_) async {
+      if (AppConstant.isClearCache) {
+        await AppManager().cleanData();
+      }
       if (AppManager().isSignIn()) {
         var success = await AppManager().tryLogIn();
         if (success) {

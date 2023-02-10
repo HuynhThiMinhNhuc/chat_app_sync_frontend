@@ -36,15 +36,15 @@ class HomePage extends GetView<HomePageController> {
         body: RefreshIndicator(
           backgroundColor: Theme.of(context).primaryColor,
           color: Theme.of(context).scaffoldBackgroundColor,
-          onRefresh: controller.syncData,
-          child: PagedListView<int, Rx<ChatRoom>>(
+          onRefresh: controller.onRefresh,
+          child: PagedListView<int, ChatRoom>(
               pagingController: controller.paggingController,
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-              builderDelegate: PagedChildBuilderDelegate<Rx<ChatRoom>>(
+              builderDelegate: PagedChildBuilderDelegate<ChatRoom>(
                 animateTransitions: true,
                 itemBuilder: (context, item, index) => OverviewChatRoom(
-                  chatRoom: item,
-                  onTap: () => controller.onTapOverViewChat(item),
+                  chatRoom: item.obs,
+                  onTap: () => controller.onTapOverViewChat(item.obs),
                 ),
               )),
         ));

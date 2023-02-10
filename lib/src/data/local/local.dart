@@ -147,6 +147,10 @@ class LocalDatasource {
     return List.from(messages.map(MessageModel.fromJson));
   }
 
+  Future<void> deleteMessage(int localId) {
+    return instance.delete('Message', where: 'localId = ?', whereArgs: [localId]);
+  }
+
   Future<List<int>> upsertMessage(List<MessageModel> messages) async {
     var rs = <int>[];
     for (var message in messages) {

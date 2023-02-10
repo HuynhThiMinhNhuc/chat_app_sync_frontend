@@ -43,7 +43,7 @@ class NetworkDatasource {
     try {
       final res =
           await _apiProvider.post(AppConstant.sendMessageUrl, data: message.toJson());
-      return ResponseData.success(Message.fromJson(res['data']), response: res);
+      return ResponseData.success(Message.fromJson(res['data'] as Map<String,dynamic>), response: res);
     } catch (e) {
       return ResponseData.failed(e);
     }
@@ -69,7 +69,7 @@ class NetworkDatasource {
         'offset': 0
       };
       final res = await _apiProvider.get(AppConstant.search, params: params);
-      final listMessage = Message.getListMessageFromJson(res['data'] as List);
+      final listMessage = Message.getListMessageFromJson(res['data'] as Map<String,dynamic>, roomId);
       return ResponseData.success(listMessage, response: res);
     } catch (e) {
       return ResponseData.failed(e);

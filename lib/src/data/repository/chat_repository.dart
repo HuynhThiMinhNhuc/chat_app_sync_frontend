@@ -35,6 +35,10 @@ class ChatRepository {
     return;
   }
 
+  Future<void> deleteMessage(int localId) {
+    return _localDatasource.deleteMessage(localId);
+  }
+
   Future<void> receiveMessages(List<Message> listMessage) async {
     var listLocalId = await _localDatasource.upsertMessage(
         List.of(listMessage.map((message) => message.asEntity())));

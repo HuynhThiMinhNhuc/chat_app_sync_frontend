@@ -41,7 +41,9 @@ class AppManager {
 
   Future<void> cleanData() async {
     await saveKeyAndCurrentInfor(null, null);
+    await setLastSyncTime(null);
     await Get.find<LocalDatasource>().cleanData();
+    return;
   }
 
   Future<void> saveKeyAndCurrentInfor(MyAccount? user, String? token) async {

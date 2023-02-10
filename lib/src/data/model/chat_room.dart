@@ -60,7 +60,11 @@ class ChatRoom extends GetxController implements Comparable<ChatRoom> {
     for (var message in messages) {
       _addOrReplaceMessage(message);
     }
-    reversedList(listMessage..sort());
+    listMessage.sort();
+  }
+
+  void removeMessage(Message message) {
+    listMessage.removeWhere((m) => m.localId == message.localId);
   }
 
   void reversedList<T>(List<T> originalList) {
@@ -89,7 +93,20 @@ class ChatRoom extends GetxController implements Comparable<ChatRoom> {
         return;
       }
     }
-    listMessage.add(newMessage);
+    listMessage.insert(0, newMessage);
+  }
+
+  ChatRoom clone(ChatRoom newData) {
+    addList(newData.listMessage);
+    return ChatRoom(
+      id: newData.id,
+      avatarUri: newData.avatarUri,
+      name: newData.name,
+      createdAt: newData.createdAt,
+      updatedAt: newData.updatedAt,
+      listJoiner: listJoiner..addAll(newData.listJoiner),
+      listMessage: listMessage,
+    );
   }
 
   RoomChatModel asEntity() => RoomChatModel(

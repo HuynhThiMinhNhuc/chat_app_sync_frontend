@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
@@ -5,7 +7,9 @@ import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
 import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
 import 'package:chat_app_sync/src/data/model/user.dart';
+import 'package:chat_app_sync/src/data/network/network.dart';
 import 'package:chat_app_sync/src/data/repository/chat_repository.dart';
+import 'package:chat_app_sync/src/presentation/home_page/home_page_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +21,7 @@ class ChatRoomController extends GetxController {
   final scrollController = ScrollController();
   var isLoading = false.obs;
   var nextPageTrigger = 7;
+  final networkDatasource = Get.find<NetworkDatasource>();
   final int numberPerLoad;
   int get currentNumberPage => room.value.listMessage.length ~/ numberPerLoad;
 
@@ -44,7 +49,6 @@ class ChatRoomController extends GetxController {
     final messages = await chatRepository.getMessages(
         room.value.id, currentNumberPage, numberPerLoad);
     room.value.addList(messages);
-    update();
     isLoading = false.obs;
   }
 
@@ -55,7 +59,23 @@ class ChatRoomController extends GetxController {
 
     await chatRepository.sendMessage(newMessage);
     room.value.addList([newMessage]);
-    update();
+    var homePageController = Get.find<HomePageController>();
+    homePageController.listChatRoom.sort();
+    homePageController.paggingController.itemList?.clear();
+    homePageController.paggingController.appendLastPage(homePageController.listChatRoom);
+    // homePageController.update();
+    networkDatasource.sendMessage(newMessage).then((res) {
+      if (res.isSuccess) {
+        room.value.addList([res.data!]);
+      } else {
+        log(res.message.toString());
+        room.value.removeMessage(newMessage);
+        chatRepository
+            .deleteMessage(newMessage.localId)
+            .catchError((error) => log("Delete message repo fail"));
+        AlertDialogWidget.show(content: 'Không thể gửi tin nhắn');
+      }
+    });
   }
 
   fetchDataWhenScroll() async {
@@ -75,7 +95,7 @@ class ChatRoomController extends GetxController {
     }
   }
 
-  search() async {
+  void search() async {
     final searchResult = await chatRepository.search(
         searchTextEditingController.text, room.value.id);
     if (searchResult.isSuccess) {
