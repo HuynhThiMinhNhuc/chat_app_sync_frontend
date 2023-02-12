@@ -29,7 +29,7 @@ dependencies:
 #workmanager
   workmanager: ^0.5.1
   cached_network_image: ^3.2.3
-  
+  socket_io_client: ^2.0.1
 dev_dependencies:
 #test
   flutter_test:

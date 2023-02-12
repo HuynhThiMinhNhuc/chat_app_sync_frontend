@@ -6,9 +6,10 @@ abstract class AppConstant {
   static double height = Get.height;
 
   //Api
+  static const host = '172.16.0.155';
   static const token = 'token';
   static const timeOut = 10000;
-  static const baseUrl = 'http://10.0.31.231:8080';
+  static const baseUrl = 'http://${host}:8080';
 
   static const login = '/account/login';
   static const getRoomUrl = '/room/get-room';
@@ -30,4 +31,7 @@ abstract class AppConstant {
 
   static const isResetDb = true;
   static const isClearCache = true;
+
+  static const socketEventSendMessage = "receive_message";
+  static const socketEventReceiveMessage = "receive_message";
 }

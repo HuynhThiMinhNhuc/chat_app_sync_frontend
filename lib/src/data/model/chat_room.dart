@@ -16,7 +16,7 @@ class ChatRoom extends GetxController implements Comparable<ChatRoom> {
   Message? get lastMessage => listMessage.isEmpty ? null : listMessage[0];
   DateTime get maxTime => lastMessage == null
       ? updatedAt
-      : lastMessage!.createdAt.isAfter(updatedAt)
+      : lastMessage!.createdAt.isBefore(updatedAt)
           ? updatedAt
           : lastMessage!.createdAt;
 
@@ -118,6 +118,6 @@ class ChatRoom extends GetxController implements Comparable<ChatRoom> {
 
   @override
   int compareTo(ChatRoom other) {
-    return maxTime.compareTo(other.maxTime);
+    return maxTime.compareTo(other.maxTime) * -1;
   }
 }

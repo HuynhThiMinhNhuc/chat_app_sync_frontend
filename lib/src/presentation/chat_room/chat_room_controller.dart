@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
+import 'package:chat_app_sync/src/common/socket/socket.dart';
 import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
 import 'package:chat_app_sync/src/data/model/chat_room.dart';
 import 'package:chat_app_sync/src/data/model/message.dart';
@@ -22,6 +23,7 @@ class ChatRoomController extends GetxController {
   var isLoading = false.obs;
   var nextPageTrigger = 7;
   final networkDatasource = Get.find<NetworkDatasource>();
+  final socket = Get.find<SocketService>();
   final int numberPerLoad;
   int get currentNumberPage => room.value.listMessage.length ~/ numberPerLoad;
 
@@ -59,11 +61,12 @@ class ChatRoomController extends GetxController {
 
     await chatRepository.sendMessage(newMessage);
     room.value.addList([newMessage]);
+
     var homePageController = Get.find<HomePageController>();
     homePageController.listChatRoom.sort();
     homePageController.paggingController.itemList?.clear();
     homePageController.paggingController.appendLastPage(homePageController.listChatRoom);
-    // homePageController.update();
+
     networkDatasource.sendMessage(newMessage).then((res) {
       if (res.isSuccess) {
         room.value.addList([res.data!]);

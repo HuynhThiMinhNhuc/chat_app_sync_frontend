@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
+import 'package:chat_app_sync/src/common/socket/socket.dart';
 import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
 import 'package:chat_app_sync/src/data/local/models/room.model.dart';
 import 'package:chat_app_sync/src/data/model/chat_room.dart';
@@ -23,6 +24,7 @@ class HomePageController extends GetxController {
   final ChatRepository chatRepository;
   final UserRepository userRepository;
   final networkDatasource = Get.find<NetworkDatasource>();
+  final socket = Get.find<SocketService>();
   final listChatRoom = <ChatRoom>[];
   int get currentNumberPage => listChatRoom.length ~/ numberPerLoad;
 
@@ -41,6 +43,23 @@ class HomePageController extends GetxController {
     super.onInit();
     paggingController.addPageRequestListener((pageKey) {
       fectchPage(pageKey);
+    });
+    socket.addEventListener(AppConstant.socketEventReceiveMessage, (e) {
+      final message = Message.fromJson(e as Map<String, dynamic>);
+      if (message.isSender) return;
+      for (var room in listChatRoom) {
+        if (room.id == message.roomId) {
+          room.addList([message]);
+          return;
+        }
+      }
+      networkDatasource.getRooms(0, 1, message.roomId).then((roomRes) {
+        if (!roomRes.isSuccess) {
+          AlertDialogWidget.show(content: "Phòng không tồn tại");
+          return;
+        }
+        addListRoom(roomRes.data!);
+      });
     });
   }
 

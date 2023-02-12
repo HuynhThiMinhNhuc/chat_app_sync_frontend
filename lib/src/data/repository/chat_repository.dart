@@ -21,11 +21,11 @@ class ChatRepository {
     var userIds = List.of(messageDbs.map((message) => message.createdById));
     var users = await _localDatasource.getUsers(userIds);
     var setUsers =
-        Map.fromIterable(users.map(User.fromEntity), key: (user) => user.id);
+        { for (var e in users) e.id : e };
     // TODO: call network
 
     return List.of(messageDbs.map((message) =>
-        Message.fromEntity(message, setUsers[message.createdById])));
+        Message.fromEntity(message, setUsers[message.createdById]!)));
   }
 
   Future<void> sendMessage(Message message) async {

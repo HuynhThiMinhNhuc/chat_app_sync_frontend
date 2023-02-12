@@ -1,6 +1,7 @@
 import 'package:chat_app_sync/src/app/app_config/app_constant.dart';
 import 'package:chat_app_sync/src/app/app_manager.dart';
 import 'package:chat_app_sync/src/app/app_routes/app_routes.dart';
+import 'package:chat_app_sync/src/common/socket/socket.dart';
 import 'package:chat_app_sync/src/common/widget/alert_dialog_widget.dart';
 import 'package:chat_app_sync/src/data/repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -62,6 +63,9 @@ class LoginController extends GetxController {
             userNameTextEditingController.text,
             passwordTextEditingController.text);
         AppManager().saveKeyAndCurrentInfor(loginRes, loginRes.token);
+        final socket = Get.find<SocketService>();
+        socket.connect();
+        socket.emitLogin(loginRes.token);
         // Navigate to home page
         Get.toNamed(AppRoutes.homePage);
       } catch (e) {

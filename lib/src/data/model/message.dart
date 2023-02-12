@@ -85,6 +85,6 @@ class Message implements Comparable<Message> {
     if (id != null && other.id != null) {
       return id!.compareTo(other.id!) * -1;
     }
-    return createdAt.compareTo(other.createdAt);
+    return createdAt.compareTo(other.createdAt) * -1;
   }
 }

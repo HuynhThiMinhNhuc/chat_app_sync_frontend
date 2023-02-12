@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chat_app_sync/src/common/base/storaged_service.dart';
+import 'package:chat_app_sync/src/common/socket/socket.dart';
 import 'package:chat_app_sync/src/data/local/local.dart';
 import 'package:chat_app_sync/src/data/local/models/my_account.model.dart';
 import 'package:chat_app_sync/src/data/repository/user_repository.dart';
@@ -21,6 +22,7 @@ class AppManager {
 
   Future<void> setup() async {
     _currentUser = await Get.find<LocalDatasource>().getAccountUser();
+    Get.find<SocketService>().connect();
   }
 
   Future<bool> tryLogIn() async {
@@ -32,6 +34,7 @@ class AppManager {
       var account =
           await userRepo.login(_currentUser!.userName, _currentUser!.password);
       saveKeyAndCurrentInfor(account, account.token);
+          Get.find<SocketService>().emitLogin(account.token);
     } catch (e) {
       log("Cannot tryLogin, err = ${e.toString()}");
       return false;
@@ -40,6 +43,7 @@ class AppManager {
   }
 
   Future<void> cleanData() async {
+    Get.find<SocketService>().disconnect();
     await saveKeyAndCurrentInfor(null, null);
     await setLastSyncTime(null);
     await Get.find<LocalDatasource>().cleanData();
